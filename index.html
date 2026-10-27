@@ -143,6 +143,10 @@ nav.tabs button[aria-selected="true"]{color:var(--accent);font-weight:700}
 .lk-item b{font-size:14px}
 .lk-item .txt{max-height:9em;overflow:auto}
 .sec{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;border-top:1px solid var(--line);padding-top:10px;margin-top:4px}
+.thumb{width:56px;height:56px;object-fit:cover;border-radius:10px;border:1px solid var(--line);flex:none}
+.ph-row{display:flex;gap:10px;align-items:flex-start}
+.ph-row img{width:72px;height:72px;object-fit:cover;border-radius:10px;border:1px solid var(--line);flex:none}
+label.btn{display:inline-flex;align-items:center;cursor:pointer}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);
   padding:9px 14px;border-radius:10px;font-size:14px;z-index:30}
 @media (max-width:420px){.grid2{grid-template-columns:1fr}}
@@ -448,7 +452,7 @@ function badges(m){
 }
 function card(m){
   return '<article class="card'+(avail(m)?"":" out")+'" data-id="'+m.id+'">'+
-   '<div class="row1"><div><h3>'+esc(m.n)+'</h3><div class="act">'+esc(m.a)+'</div></div></div>'+
+   '<div class="row1"><div><h3>'+esc(m.n)+'</h3><div class="act">'+esc(m.a)+'</div></div>'+(m.foto?'<img class="thumb" src="'+m.foto+'" alt="">':'')+'</div>'+
    '<div class="use">'+esc(m.u)+'</div>'+
    (m.p?'<div class="pres">'+esc(m.p)+'</div>':'')+
    (m.nota?'<div class="note">'+esc(m.nota)+'</div>':'')+
@@ -603,6 +607,91 @@ function fromWiki(term){
   });
 }
 
+/* ---------- Foto de la caja: lectura de texto (OCR) en el celular ---------- */
+var GENERICOS=("Paracetamol|Ibuprofeno|Naproxeno|Diclofenaco|Ketorolaco|Metamizol|Ácido acetilsalicílico|Cafeína|Clonixinato de lisina|Ketoprofeno|Meloxicam|Celecoxib|Etoricoxib|Piroxicam|Indometacina|Tramadol|Metocarbamol|Orfenadrina|Ciclobenzaprina|Tiocolchicósido|"+
+"Hioscina|Butilhioscina|Trimebutina|Floroglucinol|Trimetilfloroglucinol|Pinaverio|Simeticona|Dimeticona|Metoclopramida|Domperidona|Ondansetrón|Dimenhidrinato|Meclizina|Piridoxina|Betahistina|Cinarizina|Flunarizina|"+
+"Omeprazol|Esomeprazol|Pantoprazol|Lansoprazol|Ranitidina|Famotidina|Sucralfato|Bicarbonato de sodio|Hidróxido de aluminio|Hidróxido de magnesio|Magaldrato|Carbonato de calcio|Subsalicilato de bismuto|"+
+"Loperamida|Racecadotrilo|Diosmectita|Nifuroxazida|Metronidazol|Nitazoxanida|Albendazol|Mebendazol|Tinidazol|Secnidazol|Bacillus clausii|Saccharomyces boulardii|Lactobacillus|Bifidobacterium|Electrolitos orales|"+
+"Amoxicilina|Ácido clavulánico|Ampicilina|Dicloxacilina|Penicilina|Bencilpenicilina|Cefalexina|Cefuroxima|Cefixima|Ceftriaxona|Cefadroxilo|Azitromicina|Claritromicina|Eritromicina|Clindamicina|Ciprofloxacino|Levofloxacino|Moxifloxacino|Norfloxacino|Nitrofurantoína|Fosfomicina|Sulfametoxazol|Trimetoprima|Doxiciclina|Gentamicina|Neomicina|Tobramicina|Mupirocina|Ácido fusídico|Cloranfenicol|Polimixina|Bacitracina|"+
+"Fluconazol|Itraconazol|Ketoconazol|Clotrimazol|Miconazol|Terbinafina|Nistatina|Aciclovir|Valaciclovir|Oseltamivir|"+
+"Loratadina|Desloratadina|Cetirizina|Levocetirizina|Fexofenadina|Clorfenamina|Difenhidramina|Hidroxicina|Ketotifeno|Epinastina|Olopatadina|Montelukast|Fenilefrina|Pseudoefedrina|Oximetazolina|Nafazolina|"+
+"Dextrometorfano|Ambroxol|Bromhexina|Dropropizina|Guaifenesina|Acetilcisteína|Carbocisteína|Benzonatato|Salbutamol|Bromuro de ipratropio|Budesonida|Fluticasona|Mometasona|Beclometasona|"+
+"Betametasona|Dexametasona|Prednisona|Prednisolona|Deflazacort|Metilprednisolona|Hidrocortisona|Fluocinolona|Clobetasol|"+
+"Benzocaína|Lidocaína|Alcanfor|Mentol|Eucalipto|Óxido de zinc|Hialuronato de sodio|Carboximetilcelulosa|Hipromelosa|"+
+"Amlodipino|Losartán|Telmisartán|Valsartán|Irbesartán|Candesartán|Enalapril|Captopril|Lisinopril|Hidroclorotiazida|Clortalidona|Furosemida|Espironolactona|Metoprolol|Atenolol|Propranolol|Bisoprolol|Carvedilol|Nifedipino|Verapamilo|"+
+"Metformina|Glibenclamida|Glimepirida|Sitagliptina|Linagliptina|Dapagliflozina|Empagliflozina|Insulina|Atorvastatina|Rosuvastatina|Simvastatina|Pravastatina|Bezafibrato|Fenofibrato|Ezetimiba|Clopidogrel|Levotiroxina|Alopurinol|Colchicina|"+
+"Escitalopram|Citalopram|Fluoxetina|Sertralina|Paroxetina|Venlafaxina|Desvenlafaxina|Duloxetina|Bupropión|Mirtazapina|Trazodona|Amitriptilina|Clonazepam|Alprazolam|Lorazepam|Diazepam|Bromazepam|Zolpidem|Quetiapina|Pregabalina|Gabapentina|Melatonina|"+
+"Desogestrel|Etinilestradiol|Levonorgestrel|Drospirenona|Norelgestromina|Sildenafil|Tadalafil|Tamsulosina|Finasterida|Minoxidil|"+
+"Ácido fólico|Sulfato ferroso|Fumarato ferroso|Hierro|Complejo B|Cianocobalamina|Tiamina|Vitamina C|Ácido ascórbico|Vitamina D|Colecalciferol|Vitamina E|Zinc|Magnesio|Glicinato de magnesio|Calcio|L-teanina|Omega 3|Cúrcuma").split("|");
+var MARCAS={"tempra":"Paracetamol","tylenol":"Paracetamol","aspirina":"Ácido acetilsalicílico","advil":"Ibuprofeno","motrin":"Ibuprofeno","flanax":"Naproxeno","voltaren":"Diclofenaco","buscapina":"Butilhioscina","dolo neurobion":"Diclofenaco / Complejo B",
+ "pepto bismol":"Subsalicilato de bismuto","melox":"Hidróxido de aluminio / Hidróxido de magnesio","treda":"Neomicina / Caolín / Pectina","imodium":"Loperamida","clarityne":"Loratadina","allegra":"Fexofenadina","zyrtec":"Cetirizina","desenfriol":"Paracetamol / Fenilefrina / Clorfenamina",
+ "next":"Paracetamol / Loratadina / Fenilefrina","xl-3":"Paracetamol / Clorfenamina / Fenilefrina","teraflu":"Paracetamol / Fenilefrina","alka-seltzer":"Ácido acetilsalicílico / Bicarbonato de sodio","sal de uvas":"Bicarbonato de sodio / Ácido cítrico","bactrim":"Sulfametoxazol / Trimetoprima",
+ "flagyl":"Metronidazol","augmentin":"Amoxicilina / Ácido clavulánico","dramamine":"Dimenhidrinato","bonadoxina":"Meclizina / Piridoxina","sedalmerck":"Paracetamol / Cafeína","vick":"Alcanfor / Mentol / Eucalipto","vaporub":"Alcanfor / Mentol / Eucalipto",
+ "graneodin":"Bacitracina / Neomicina","afrin":"Oximetazolina","nexium":"Esomeprazol","lyrica":"Pregabalina","neo-melubrina":"Metamizol","neomelubrina":"Metamizol","excedrin":"Ácido acetilsalicílico / Paracetamol / Cafeína","tabcin":"Ácido acetilsalicílico / Fenilefrina / Clorfenamina"};
+function lev(a,b){if(a===b)return 0;var m=a.length,n=b.length;if(Math.abs(m-n)>3)return 9;var p=[],i,j;for(j=0;j<=n;j++)p[j]=j;for(i=1;i<=m;i++){var prev=p[0];p[0]=i;for(j=1;j<=n;j++){var t=p[j];p[j]=Math.min(p[j]+1,p[j-1]+1,prev+(a[i-1]===b[j-1]?0:1));prev=t}}return p[n]}
+function words(t){return norm(t).replace(/[^a-z0-9\- ]+/g," ").split(" ").filter(function(w){return w.length>=4})}
+function findActivos(text){
+  var ws=words(text),found=[];
+  GENERICOS.forEach(function(g){
+    var key=norm(g).split(" ").filter(function(w){return w.length>=5&&["acido","sodio","lisina","magnesio","aluminio","calcio"].indexOf(w)<0}).sort(function(a,b){return b.length-a.length})[0]||norm(g);
+    var tol=key.length>=10?2:(key.length>=6?1:0);
+    if(ws.some(function(w){return w===key||(tol&&lev(w,key)<=tol)}))found.push(g);
+  });
+  // quita los contenidos en otros más largos (p. ej. "Magnesio" dentro de "Glicinato de magnesio")
+  return found.filter(function(g){return !found.some(function(o){return o!==g&&norm(o).indexOf(norm(g))>-1})});
+}
+function findMarca(text){
+  var t=" "+norm(text).replace(/[^a-z0-9\- ]+/g," ")+" ",ws=words(text);
+  var own=meds.map(function(m){return [norm(m.n),m]}).filter(function(x){return x[0].length>=5});
+  for(var i=0;i<own.length;i++){var k=own[i][0].split(" ")[0];if(k.length>=5&&ws.some(function(w){return w===k||lev(w,k)<=1}))return {n:own[i][1].n,a:own[i][1].a}}
+  for(var b in MARCAS){if(t.indexOf(" "+b+" ")>-1||(b.length>=6&&ws.some(function(w){return lev(w,b)<=1})))return {n:cap(b),a:MARCAS[b]}}
+  return null;
+}
+var MES={ene:1,jan:1,feb:2,mar:3,abr:4,apr:4,may:5,jun:6,jul:7,ago:8,aug:8,sep:9,set:9,oct:10,nov:11,dic:12,dec:12};
+function findCad(text){
+  var t=norm(text).toUpperCase().replace(/(\d)O/g,"$10").replace(/O(\d)/g,"0$1"),c=[],m,y;
+  var re1=/(?:CAD|EXP|CADUCIDAD|VENCE|VEN|CAD\.)[^0-9A-Z]{0,4}(\d{1,2})\s*[\/\-. ]\s*(\d{2,4})/g;
+  while((m=re1.exec(t))){y=+m[2];if(y<100)y+=2000;if(+m[1]>=1&&+m[1]<=12)c.push([y,+m[1],2])}
+  var re2=/\b(ENE|FEB|MAR|ABR|MAY|JUN|JUL|AGO|SEPT?|SET|OCT|NOV|DIC|JAN|APR|AUG|DEC)[\s.\/\-]{0,3}(20\d{2}|\d{2})\b/g;
+  while((m=re2.exec(t))){y=+m[2];if(y<100)y+=2000;c.push([y,MES[m[1].slice(0,3).toLowerCase()],1])}
+  var re3=/\b(0?[1-9]|1[0-2])\s*[\/\-]\s*(20[2-3]\d)\b/g;
+  while((m=re3.exec(t))){c.push([+m[2],+m[1],0])}
+  c=c.filter(function(x){return x[0]>=2024&&x[0]<=2036&&x[1]>=1&&x[1]<=12});
+  if(!c.length)return "";
+  c.sort(function(a,b){return (b[2]-a[2])||(b[0]-a[0])||(b[1]-a[1])}); // con etiqueta CAD primero; si no, la fecha más lejana
+  return c[0][0]+"-"+String(c[0][1]).padStart(2,"0");
+}
+function findPres(text){
+  var raw=text.replace(/\s+/g," "),out=[];
+  var forma=raw.match(/\b(tabletas?|c[áa]psulas?|comprimidos?|grageas?|jarabe|suspensi[óo]n|soluci[óo]n|gotas|crema|ung[üu]ento|gel|polvo|sobres?|ampolletas?|ampollas?|spray|aerosol|[óo]vulos?|supositorios?)\b/i);
+  if(forma)out.push(forma[1].charAt(0).toUpperCase()+forma[1].slice(1).toLowerCase());
+  var dosis=raw.match(/\d+(?:[.,]\d+)?\s?(?:mg|g|mcg|µg|ml|mL|UI|%)(?:\s?\/\s?\d+(?:[.,]\d+)?\s?(?:mg|g|mcg|ml|mL|%)?){0,3}/i);
+  if(dosis)out.push(dosis[0].replace(/\s+/g," "));
+  var caja=raw.match(/(caja|frasco|tubo|sobre|blister|bl[íi]ster)\s+con\s+\d+\s?\w*/i);
+  return out.join(" ")+(caja?(out.length?" · ":"")+caja[0].toLowerCase():"");
+}
+function loadScript(src){return new Promise(function(res,rej){if(window.Tesseract)return res();var s=document.createElement("script");s.src=src;s.onload=res;s.onerror=function(){rej(new Error("No se pudo descargar el lector"))};document.head.appendChild(s)})}
+function prepImage(file,max){
+  return new Promise(function(res,rej){
+    var url=URL.createObjectURL(file),img=new Image();
+    img.onload=function(){
+      var k=Math.min(1,max/Math.max(img.width,img.height)),w=Math.round(img.width*k),h=Math.round(img.height*k);
+      var cv=document.createElement("canvas");cv.width=w;cv.height=h;var cx=cv.getContext("2d");cx.drawImage(img,0,0,w,h);
+      var th=document.createElement("canvas"),tk=Math.min(1,220/Math.max(w,h));th.width=Math.round(w*tk);th.height=Math.round(h*tk);th.getContext("2d").drawImage(cv,0,0,th.width,th.height);
+      URL.revokeObjectURL(url);res({canvas:cv,thumb:th.toDataURL("image/jpeg",0.6)});
+    };
+    img.onerror=function(){URL.revokeObjectURL(url);rej(new Error("No se pudo abrir la foto"))};
+    img.src=url;
+  });
+}
+var ocrWorker=null;
+function ocr(canvas,onProg){
+  return loadScript("https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js").then(function(){
+    if(ocrWorker)return ocrWorker;
+    return Tesseract.createWorker("spa",1,{logger:function(m){if(m.status&&onProg)onProg(m.status,m.progress)}}).then(function(w){ocrWorker=w;return w});
+  }).then(function(w){return w.recognize(canvas)}).then(function(r){return r.data.text||""});
+}
+
 /* ---------- Editar / agregar ---------- */
 var sheet=document.getElementById("sheet"),panel=document.getElementById("panel");
 function closeSheet(){sheet.hidden=true;panel.innerHTML="";document.body.style.overflow=""}
@@ -612,9 +701,14 @@ function openEdit(m){
   var isNew=!m;
   m=m||{id:"",n:"",a:"",p:"",u:"",c:[],s:[],pub:"todos",rx:false,q:1,unit:"envase",cad:"",nota:"",kw:"",pac:"",dosis:"",doc:"",frec:"",src:"",srcName:""};
   var dl=function(id,arr){return '<datalist id="'+id+'">'+arr.map(function(v){return '<option value="'+esc(v)+'">'}).join("")+'</datalist>'};
-  var draftSrc={src:m.src||"",srcName:m.srcName||"",s:(m.s||[]).slice()};
+  var draftSrc={src:m.src||"",srcName:m.srcName||"",s:(m.s||[]).slice(),foto:m.foto||""};
   panel.innerHTML='<h2 id="sheetTitle">'+(isNew?"Agregar medicina":"Editar medicina")+'</h2>'+
    '<form id="ef" novalidate><div style="display:flex;flex-direction:column;gap:10px">'+
+   '<div class="lookup" id="phBox"><div class="toolbar">'+
+     '<label class="btn primary" for="e_cam">Tomar foto de la caja</label><input id="e_cam" type="file" accept="image/*" capture="environment" hidden>'+
+     '<label class="btn" for="e_gal">Elegir de galería</label><input id="e_gal" type="file" accept="image/*" hidden></div>'+
+     '<div class="ph-row"><img id="e_thumb" alt="Foto de la caja"'+(m.foto?' src="'+m.foto+'"':' hidden')+'><div class="hint" id="phHint">Toma la foto de frente, con el texto derecho y buena luz. Puedes tomar otra del costado para leer la caducidad. Necesita internet.</div></div>'+
+     '<details id="phTxt" hidden><summary class="src">Texto leído</summary><div class="src" id="phRaw"></div></details></div>'+
    '<div class="f"><label for="e_n">Nombre (como dice la caja)</label><input id="e_n" required value="'+esc(m.n)+'"></div>'+
    '<div class="f"><label for="e_a">Sustancia activa (letra chica bajo el nombre)</label><input id="e_a" value="'+esc(m.a)+'" placeholder="Ej. Metoclopramida"></div>'+
    '<div class="lookup"><div class="toolbar"><button class="btn primary" type="button" id="lkBtn">Buscar para qué sirve</button>'+
@@ -675,6 +769,30 @@ function openEdit(m){
         :"No encontré información en línea para “"+t+"”. Prueba con la sustancia activa o usa “Abrir en Google”.";
     });
   };
+  var onPhoto=function(){
+    var f=this.files&&this.files[0];this.value="";if(!f)return;
+    var hint=$("#phHint");hint.textContent="Preparando la foto…";
+    prepImage(f,1800).then(function(img){
+      draftSrc.foto=img.thumb;var th=$("#e_thumb");th.src=img.thumb;th.hidden=false;
+      if(navigator.onLine===false)throw new Error("Sin internet: la foto se guardó, pero para leer el texto necesitas conexión.");
+      hint.textContent="Leyendo el texto de la caja… (la primera vez tarda un poco más)";
+      return ocr(img.canvas,function(st,pr){if(st.indexOf("recognizing")===0)hint.textContent="Leyendo el texto… "+Math.round((pr||0)*100)+"%";else if(st.indexOf("loading")===0)hint.textContent="Descargando el lector de texto…"});
+    }).then(function(text){
+      $("#phTxt").hidden=false;$("#phRaw").textContent=text.replace(/\s+/g," ").trim()||"(no se leyó texto)";
+      var act=findActivos(text),marca=findMarca(text),pres=findPres(text),cad=findCad(text),got=[];
+      if(marca&&!$("#e_n").value.trim()){$("#e_n").value=marca.n;got.push("nombre")}
+      var aTxt=act.length?act.join(" / "):(marca?marca.a:"");
+      if(aTxt&&!$("#e_a").value.trim()){$("#e_a").value=aTxt;got.push("sustancia activa")}
+      if(!$("#e_n").value.trim()&&aTxt){$("#e_n").value=aTxt;got.push("nombre")}
+      if(pres&&!$("#e_p").value.trim()){$("#e_p").value=pres;got.push("presentación")}
+      if(cad&&!$("#e_cad").value){$("#e_cad").value=cad;got.push("caducidad")}
+      updG();
+      if(!got.length){hint.textContent="No pude reconocer datos en esta foto. Intenta con otra más cerca y derecha, o mándale la foto a Claude en el chat.";return}
+      hint.textContent="Leí: "+got.join(", ")+". Revisa que esté bien."+(aTxt?" Buscando para qué sirve…":" No reconocí la sustancia activa: escríbela o manda la foto a Claude.");
+      if(aTxt&&!$("#e_u").value.trim())$("#lkBtn").click();
+    }).catch(function(err){hint.textContent=(err&&err.message&&err.message.indexOf("internet")>-1)?err.message:"No se pudo leer la foto ("+((err&&err.message)||"error")+"). Revisa tu conexión o manda la foto a Claude en el chat."});
+  };
+  $("#e_cam").addEventListener("change",onPhoto);$("#e_gal").addEventListener("change",onPhoto);
   $("#lkRes").addEventListener("click",function(e){
     var b=e.target.closest("[data-use]");if(!b)return;
     var item=b.closest(".lk-item"),r=item.__r;if(!r)return;
@@ -706,7 +824,7 @@ function openEdit(m){
     if(!o.c.length)o.c=["otros"];
     o.s=draftSrc.s.slice();
     detect(norm(o.kw+" "+o.u)).forEach(function(x){if(o.s.indexOf(x)<0)o.s.push(x)});
-    o.src=draftSrc.src;o.srcName=draftSrc.srcName;
+    o.src=draftSrc.src;o.srcName=draftSrc.srcName;o.foto=draftSrc.foto||"";
     if(isNew)meds.push(o);
     save();closeSheet();renderAll();toast(isNew?"Medicina agregada":"Cambios guardados");
   });
