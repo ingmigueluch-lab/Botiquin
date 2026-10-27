@@ -1,4 +1,4 @@
-const C="botiquin-v4";
+const C="botiquin-v5";
 const F=["./","index.html","manifest.webmanifest","icon-180.png","icon-192.png","icon-512.png"];
 // iOS no muestra respuestas "redirigidas" servidas por el service worker: se copian limpias.
 function clean(r){if(!r||!r.redirected)return Promise.resolve(r);return r.blob().then(b=>new Response(b,{status:r.status,statusText:r.statusText,headers:r.headers}))}
@@ -6,7 +6,7 @@ self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>Promise.a
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener("fetch",e=>{
   const req=e.request,u=new URL(req.url);
-  if(req.method!=="GET"||u.origin!==location.origin)return;
+  if(req.method!=="GET"||u.origin!==location.origin||u.pathname.endsWith("meds.json"))return;
   if(req.mode==="navigate"){
     e.respondWith(
       Promise.race([fetch(req.url,{cache:"no-store"}),new Promise((_,rej)=>setTimeout(()=>rej(),5000))])

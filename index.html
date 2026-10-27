@@ -365,6 +365,10 @@ M("Minoxidil 5 %","Minoxidil","Solución spray · 60 mL","Caída de cabello (uso
 
 /* ---------- Estado ---------- */
 var meds;
+SEED.forEach(function(m,i){m.key="s"+String(i+1).padStart(3,"0")});
+var DELKEY="botiquin_borradas_v1";
+function loadDel(){try{return JSON.parse(localStorage.getItem(DELKEY)||"[]")}catch(e){return []}}
+function saveDel(d){try{localStorage.setItem(DELKEY,JSON.stringify(d))}catch(e){}}
 function uid(){return "m"+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function seed(){return SEED.map(function(m){var o=JSON.parse(JSON.stringify(m));o.id=uid();return o})}
 function load(){
@@ -687,7 +691,7 @@ function openEdit(m){
   if(!isNew){
     $("#delBtn").onclick=function(){$("#delBox").hidden=false};
     $("#delNo").onclick=function(){$("#delBox").hidden=true};
-    $("#delYes").onclick=function(){meds=meds.filter(function(x){return x.id!==m.id});save();closeSheet();renderAll();toast("Eliminado")};
+    $("#delYes").onclick=function(){if(m.key){var d=loadDel();if(d.indexOf(m.key)<0){d.push(m.key);saveDel(d)}}meds=meds.filter(function(x){return x.id!==m.id});save();closeSheet();renderAll();toast("Eliminado")};
   }
   $("#ef").addEventListener("submit",function(e){
     e.preventDefault();
@@ -743,9 +747,33 @@ document.getElementById("importBtn").addEventListener("click",function(){
 document.getElementById("fileIn").addEventListener("change",function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){applyImport(r.result)};r.readAsText(f);this.value=""});
 document.getElementById("resetBtn").addEventListener("click",function(){document.getElementById("resetConfirm").hidden=false});
 document.getElementById("resetNo").addEventListener("click",function(){document.getElementById("resetConfirm").hidden=true});
-document.getElementById("resetYes").addEventListener("click",function(){meds=seed();save();document.getElementById("resetConfirm").hidden=true;renderAll();toast("Lista original restablecida")});
+document.getElementById("resetYes").addEventListener("click",function(){meds=seed();save();saveDel([]);syncRepo();document.getElementById("resetConfirm").hidden=true;renderAll();toast("Lista original restablecida")});
 
+/* ---------- Medicinas nuevas publicadas en GitHub (meds.json) ---------- */
+var FILL=["a","p","u","cad","pac","dosis","doc","frec","src","srcName","nota","unit"];
+function syncRepo(){
+  if(location.protocol.indexOf("http")!==0||navigator.onLine===false)return;
+  fetch("meds.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.json():null}).then(function(j){
+    var list=j&&(Array.isArray(j)?j:j.meds);if(!Array.isArray(list))return;
+    var del=loadDel(),byKey={},byName={},added=0,filled=0;
+    meds.forEach(function(m){if(m.key)byKey[m.key]=m;byName[norm(m.n)]=m});
+    list.forEach(function(r){
+      if(!r||!r.key||!r.n||del.indexOf(r.key)>-1)return;
+      var nm=byName[norm(r.n)],m=byKey[r.key]||(nm&&!nm.key?nm:null);
+      if(m){
+        if(!m.key)m.key=r.key;
+        FILL.forEach(function(f){if((m[f]===undefined||m[f]==="")&&r[f]){m[f]=r[f];filled++}});
+        if(r.rx&&!m.rx){m.rx=true;filled++}
+      }else{
+        var o=JSON.parse(JSON.stringify(r));o.id=uid();o.c=o.c||["otros"];o.s=o.s||[];o.q=(o.q===undefined?1:+o.q||0);o.unit=o.unit||"envase";
+        meds.push(o);byKey[o.key]=o;added++;
+      }
+    });
+    if(added||filled){save();renderAll();toast(added?(added>1?"Se agregaron "+added+" medicinas nuevas":"Se agregó 1 medicina nueva"):"Información actualizada")}
+  }).catch(function(){});
+}
 renderAll();
+syncRepo();
 })();
 if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0){navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).catch(function(){})}
 </script>

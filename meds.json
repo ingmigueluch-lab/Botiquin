@@ -1,0 +1,1691 @@
+{
+ "actualizado": "2026-10-27",
+ "meds": [
+  {
+   "n": "Hidrasec",
+   "a": "Racecadotrilo",
+   "p": "Cápsulas 100 mg · caja con 9",
+   "u": "Diarrea aguda: disminuye las evacuaciones líquidas.",
+   "c": [
+    "diarrea"
+   ],
+   "s": [
+    "diarrea"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "Escrito en la caja: Antidiarreico",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s001"
+  },
+  {
+   "n": "Azitromicina",
+   "a": "Azitromicina",
+   "p": "Tabletas 500 mg · caja con 3",
+   "u": "Antibiótico para infecciones de garganta, bronquios, oído y piel.",
+   "c": [
+    "antibiotico"
+   ],
+   "s": [
+    "garganta",
+    "infeccion_respiratoria",
+    "infeccion_oido",
+    "infeccion_piel"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s002"
+  },
+  {
+   "n": "Dirpasid",
+   "a": "Metoclopramida",
+   "p": "Tabletas 10 mg · caja con 20",
+   "u": "Náusea, vómito y digestión lenta o reflujo.",
+   "c": [
+    "nausea",
+    "acidez"
+   ],
+   "s": [
+    "nausea",
+    "vomito",
+    "acidez"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "No darla a niños sin indicación médica.",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s003"
+  },
+  {
+   "n": "Ampicilina",
+   "a": "Ampicilina",
+   "p": "Tabletas 500 mg · caja con 20",
+   "u": "Antibiótico para infecciones respiratorias, urinarias y de oído.",
+   "c": [
+    "antibiotico"
+   ],
+   "s": [
+    "garganta",
+    "infeccion_respiratoria",
+    "infeccion_urinaria",
+    "infeccion_oido"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s004"
+  },
+  {
+   "n": "Berniver",
+   "a": "Mupirocina 2 %",
+   "p": "Ungüento · tubo 15 g",
+   "u": "Infecciones de la piel: heridas o granitos infectados, impétigo.",
+   "c": [
+    "piel"
+   ],
+   "s": [
+    "infeccion_piel"
+   ],
+   "pub": "todos",
+   "rx": true,
+   "q": 1,
+   "unit": "tubo",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s005"
+  },
+  {
+   "n": "Laritol D",
+   "a": "Loratadina / Fenilefrina",
+   "p": "Solución adulto",
+   "u": "Gripe y resfriado: congestión nasal, escurrimiento y estornudos.",
+   "c": [
+    "gripe",
+    "alergia"
+   ],
+   "s": [
+    "gripe",
+    "congestion",
+    "alergia"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s006"
+  },
+  {
+   "n": "Acarbixin",
+   "a": "Amoxicilina / Ácido clavulánico",
+   "p": "Tabletas 500/125 mg",
+   "u": "Antibiótico para garganta, oído, sinusitis, vías urinarias, piel e infecciones dentales.",
+   "c": [
+    "antibiotico"
+   ],
+   "s": [
+    "garganta",
+    "infeccion_respiratoria",
+    "infeccion_oido",
+    "infeccion_urinaria",
+    "infeccion_piel",
+    "dolor_dental"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s007"
+  },
+  {
+   "n": "Bactrim suspensión",
+   "a": "Sulfametoxazol / Trimetoprima",
+   "p": "Suspensión 200/40 mg por 5 mL · 100 mL",
+   "u": "Antibiótico infantil: infección urinaria, de oído, respiratoria o intestinal.",
+   "c": [
+    "antibiotico"
+   ],
+   "s": [
+    "infeccion_urinaria",
+    "infeccion_oido",
+    "infeccion_respiratoria",
+    "infeccion_intestinal"
+   ],
+   "pub": "infantil",
+   "rx": true,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "2027-06",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s008"
+  },
+  {
+   "n": "Neo-Melubrina infantil",
+   "a": "Metamizol sódico",
+   "p": "Jarabe 250 mg/5 mL · 100 mL",
+   "u": "Fiebre y dolor en niños.",
+   "c": [
+    "fiebre",
+    "cabeza"
+   ],
+   "s": [
+    "fiebre",
+    "dolor_cabeza",
+    "dolor_general"
+   ],
+   "pub": "infantil",
+   "rx": false,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s009"
+  },
+  {
+   "n": "Histiacil NF infantil",
+   "a": "Dextrometorfano / Ambroxol",
+   "p": "Jarabe · 150 mL",
+   "u": "Tos y para aflojar y expulsar flemas en niños.",
+   "c": [
+    "tos"
+   ],
+   "s": [
+    "tos",
+    "flemas"
+   ],
+   "pub": "infantil",
+   "rx": false,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s010"
+  },
+  {
+   "n": "Biotazol",
+   "a": "Metronidazol",
+   "p": "Suspensión 250 mg/5 mL · 120 mL",
+   "u": "Amibas, giardia y otras infecciones intestinales por parásitos.",
+   "c": [
+    "diarrea"
+   ],
+   "s": [
+    "parasitos",
+    "diarrea",
+    "infeccion_intestinal"
+   ],
+   "pub": "todos",
+   "rx": true,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s011"
+  },
+  {
+   "n": "Ciprofloxacino",
+   "a": "Ciprofloxacino",
+   "p": "Tabletas 500 mg",
+   "u": "Antibiótico para infección urinaria e infección intestinal.",
+   "c": [
+    "antibiotico"
+   ],
+   "s": [
+    "infeccion_urinaria",
+    "infeccion_intestinal",
+    "diarrea"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "Escrito en la caja: Inf. urinaria",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s012"
+  },
+  {
+   "n": "Trimetoprima / Sulfametoxazol tabletas",
+   "a": "Trimetoprima / Sulfametoxazol",
+   "p": "Tabletas 160/800 mg · frasco con 14",
+   "u": "Antibiótico para infección urinaria, respiratoria, de oído o intestinal.",
+   "c": [
+    "antibiotico"
+   ],
+   "s": [
+    "infeccion_urinaria",
+    "infeccion_respiratoria",
+    "infeccion_oido",
+    "infeccion_intestinal"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s013"
+  },
+  {
+   "n": "Trimetoprima / Sulfametoxazol suspensión",
+   "a": "Trimetoprima / Sulfametoxazol",
+   "p": "Suspensión 800/4000 mg por 100 mL · 120 mL",
+   "u": "Antibiótico (versión líquida, se usa en niños): infección urinaria, de oído, respiratoria o intestinal.",
+   "c": [
+    "antibiotico"
+   ],
+   "s": [
+    "infeccion_urinaria",
+    "infeccion_respiratoria",
+    "infeccion_oido",
+    "infeccion_intestinal"
+   ],
+   "pub": "infantil",
+   "rx": true,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s014"
+  },
+  {
+   "n": "Bactiver",
+   "a": "Sulfametoxazol / Trimetoprima",
+   "p": "Tabletas 400/80 mg · caja con 20",
+   "u": "Antibiótico para infección urinaria, respiratoria, de oído o intestinal.",
+   "c": [
+    "antibiotico"
+   ],
+   "s": [
+    "infeccion_urinaria",
+    "infeccion_respiratoria",
+    "infeccion_oido",
+    "infeccion_intestinal"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s015"
+  },
+  {
+   "n": "Excedrin Migraña",
+   "a": "Ácido acetilsalicílico / Paracetamol / Cafeína",
+   "p": "Tabletas 250/250/65 mg · frasco con 24",
+   "u": "Migraña y dolor de cabeza.",
+   "c": [
+    "cabeza",
+    "fiebre"
+   ],
+   "s": [
+    "migrana",
+    "dolor_cabeza",
+    "dolor_general"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s016"
+  },
+  {
+   "n": "Espabion",
+   "a": "Trimebutina",
+   "p": "Suspensión 2 g/100 mL · 100 mL",
+   "u": "Colitis, cólico intestinal, gases e inflamación del estómago.",
+   "c": [
+    "colico"
+   ],
+   "s": [
+    "colico",
+    "gases"
+   ],
+   "pub": "todos",
+   "rx": false,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s017"
+  },
+  {
+   "n": "Floroglucinol",
+   "a": "Floroglucinol / Trimetilfloroglucinol",
+   "p": "Cápsulas 80/80 mg",
+   "u": "Cólicos intestinales, menstruales y de vías urinarias.",
+   "c": [
+    "colico"
+   ],
+   "s": [
+    "colico",
+    "colico_menstrual"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s018"
+  },
+  {
+   "n": "Eskapar",
+   "a": "Nifuroxazida",
+   "p": "Cápsulas 400 mg · caja con 16",
+   "u": "Diarrea por infección intestinal (antiséptico intestinal).",
+   "c": [
+    "diarrea"
+   ],
+   "s": [
+    "diarrea",
+    "infeccion_intestinal"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "Escrito en la caja: 1 en la mañana y 1 en la noche",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s019"
+  },
+  {
+   "n": "Meclison",
+   "a": "Meclizina / Piridoxina",
+   "p": "Tabletas 25/50 mg · caja con 10",
+   "u": "Mareo (de viaje o vértigo), náusea y vómito.",
+   "c": [
+    "nausea"
+   ],
+   "s": [
+    "mareo",
+    "nausea",
+    "vomito"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s020"
+  },
+  {
+   "n": "Diosmectita (Iprikene)",
+   "a": "Diosmectita",
+   "p": "Polvo 3 g · caja con 10 sobres",
+   "u": "Diarrea aguda; se disuelve en agua.",
+   "c": [
+    "diarrea"
+   ],
+   "s": [
+    "diarrea"
+   ],
+   "pub": "todos",
+   "rx": false,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s021"
+  },
+  {
+   "n": "Precicol",
+   "a": "Hioscina / Paracetamol",
+   "p": "Tabletas 10/500 mg · caja con 20",
+   "u": "Cólico y dolor de estómago o intestinal.",
+   "c": [
+    "colico"
+   ],
+   "s": [
+    "colico",
+    "colico_menstrual",
+    "dolor_general"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s022"
+  },
+  {
+   "n": "Clonixinato de lisina / Hioscina",
+   "a": "Clonixinato de lisina / Hioscina",
+   "p": "Tabletas 250/10 mg",
+   "u": "Cólico y dolor abdominal, incluido el dolor de vías urinarias o menstrual.",
+   "c": [
+    "colico"
+   ],
+   "s": [
+    "colico",
+    "colico_menstrual",
+    "infeccion_urinaria"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "Escrito en la caja: Infección orina. Calma el dolor; la infección se trata con antibiótico.",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s023"
+  },
+  {
+   "n": "Drosequim infantil",
+   "a": "Dropropizina / Bromhexina",
+   "p": "Jarabe 150/80 mg por 100 mL · 200 mL",
+   "u": "Tos con flemas en niños.",
+   "c": [
+    "tos"
+   ],
+   "s": [
+    "tos",
+    "flemas"
+   ],
+   "pub": "infantil",
+   "rx": false,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s024"
+  },
+  {
+   "n": "Bicarbonato de sodio",
+   "a": "Bicarbonato de sodio",
+   "p": "Polvo · 200 g",
+   "u": "Acidez y agruras ocasionales.",
+   "c": [
+    "acidez"
+   ],
+   "s": [
+    "acidez"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s025"
+  },
+  {
+   "n": "Sal de uvas Picot",
+   "a": "Bicarbonato / Ácido tartárico / Ácido cítrico",
+   "p": "Sobre efervescente 5 g",
+   "u": "Acidez, agruras y malestar estomacal.",
+   "c": [
+    "acidez"
+   ],
+   "s": [
+    "acidez"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "sobre",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s026"
+  },
+  {
+   "n": "Soltadol",
+   "a": "Paracetamol",
+   "p": "Tabletas 750 mg · caja con 20",
+   "u": "Dolor y fiebre; dolor de cabeza.",
+   "c": [
+    "fiebre",
+    "cabeza"
+   ],
+   "s": [
+    "fiebre",
+    "dolor_cabeza",
+    "dolor_general",
+    "dolor_dental"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s027"
+  },
+  {
+   "n": "Paracetamol 650",
+   "a": "Paracetamol",
+   "p": "Tabletas 650 mg · caja con 24",
+   "u": "Dolor leve a moderado, fiebre y dolor por artritis.",
+   "c": [
+    "fiebre",
+    "cabeza"
+   ],
+   "s": [
+    "fiebre",
+    "dolor_cabeza",
+    "dolor_general",
+    "dolor_articular",
+    "dolor_dental"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s028"
+  },
+  {
+   "n": "Onexmol",
+   "a": "Naproxeno sódico / Paracetamol",
+   "p": "Tabletas 275/300 mg · frasco con 10",
+   "u": "Dolor de cabeza, muscular, dental o menstrual; fiebre e inflamación.",
+   "c": [
+    "fiebre",
+    "cabeza",
+    "musculo"
+   ],
+   "s": [
+    "dolor_cabeza",
+    "dolor_general",
+    "dolor_muscular",
+    "dolor_articular",
+    "dolor_dental",
+    "colico_menstrual",
+    "fiebre"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s029"
+  },
+  {
+   "n": "Dafloxen F",
+   "a": "Naproxeno sódico / Paracetamol",
+   "p": "Suspensión 125/100 mg por 5 mL",
+   "u": "Dolor y fiebre en niños.",
+   "c": [
+    "fiebre"
+   ],
+   "s": [
+    "fiebre",
+    "dolor_general",
+    "dolor_cabeza",
+    "dolor_dental"
+   ],
+   "pub": "infantil",
+   "rx": false,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s030"
+  },
+  {
+   "n": "Paracetamol pediátrico",
+   "a": "Paracetamol",
+   "p": "Jarabe 3.2 g/100 mL · 120 mL",
+   "u": "Baja la fiebre y alivia el dolor en niños.",
+   "c": [
+    "fiebre"
+   ],
+   "s": [
+    "fiebre",
+    "dolor_general",
+    "dolor_cabeza"
+   ],
+   "pub": "infantil",
+   "rx": false,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s031"
+  },
+  {
+   "n": "Tabcin efervescente",
+   "a": "Ácido acetilsalicílico / Fenilefrina / Clorfenamina",
+   "p": "Tabletas efervescentes 500/8/2 mg",
+   "u": "Gripe: dolor de cabeza, fiebre, congestión y escurrimiento.",
+   "c": [
+    "gripe",
+    "cabeza"
+   ],
+   "s": [
+    "gripe",
+    "congestion",
+    "fiebre",
+    "dolor_cabeza"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 2,
+   "unit": "sobres",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s032"
+  },
+  {
+   "n": "Flexiver Compuesto",
+   "a": "Meloxicam / Metocarbamol",
+   "p": "Cápsulas 7.5/215 mg · caja con 20",
+   "u": "Dolor muscular, contracturas, espalda y torceduras.",
+   "c": [
+    "musculo"
+   ],
+   "s": [
+    "dolor_muscular",
+    "dolor_articular"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s033"
+  },
+  {
+   "n": "Exicort",
+   "a": "Etoricoxib",
+   "p": "Comprimidos 90 mg · caja con 28",
+   "u": "Dolor e inflamación de articulaciones (artritis, gota), muscular y dental.",
+   "c": [
+    "musculo"
+   ],
+   "s": [
+    "dolor_articular",
+    "dolor_muscular",
+    "dolor_dental"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s034"
+  },
+  {
+   "n": "Dicleophen",
+   "a": "Dicloxacilina",
+   "p": "Cápsulas 500 mg · caja con 12",
+   "u": "Antibiótico para infecciones de piel (abscesos, heridas infectadas) y garganta.",
+   "c": [
+    "antibiotico"
+   ],
+   "s": [
+    "infeccion_piel",
+    "garganta"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s035"
+  },
+  {
+   "n": "Erispan Compuesto pediátrico",
+   "a": "Loratadina / Betametasona",
+   "p": "Solución 100 mg/5 mg por 100 mL · 60 mL",
+   "u": "Alergias fuertes en niños: ronchas, urticaria, rinitis.",
+   "c": [
+    "alergia"
+   ],
+   "s": [
+    "alergia"
+   ],
+   "pub": "infantil",
+   "rx": false,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "Contiene cortisona: solo por pocos días.",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s036"
+  },
+  {
+   "n": "Mometasona spray nasal",
+   "a": "Mometasona 0.05 %",
+   "p": "Suspensión para inhalación nasal · 18 mL (140 dosis)",
+   "u": "Rinitis alérgica y congestión nasal que no se quita.",
+   "c": [
+    "alergia",
+    "gripe"
+   ],
+   "s": [
+    "congestion",
+    "alergia"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s037"
+  },
+  {
+   "n": "Vick VapoRub",
+   "a": "Alcanfor / Mentol / Aceite de eucalipto",
+   "p": "Ungüento · lata 12 g",
+   "u": "Se frota en pecho y espalda: resfriado, congestión y tos.",
+   "c": [
+    "gripe",
+    "tos"
+   ],
+   "s": [
+    "gripe",
+    "congestion",
+    "tos"
+   ],
+   "pub": "todos",
+   "rx": false,
+   "q": 1,
+   "unit": "lata",
+   "cad": "",
+   "nota": "No usar en menores de 2 años.",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s038"
+  },
+  {
+   "n": "Ungüento 666",
+   "a": "Ungüento descongestionante",
+   "p": "Tarro 35 g",
+   "u": "Ayuda a descongestionar nariz, garganta irritada y bronquios.",
+   "c": [
+    "gripe",
+    "tos"
+   ],
+   "s": [
+    "congestion",
+    "gripe",
+    "garganta",
+    "tos",
+    "flemas"
+   ],
+   "pub": "todos",
+   "rx": false,
+   "q": 1,
+   "unit": "tarro",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s039"
+  },
+  {
+   "n": "Dexametasona / Neomicina gotas",
+   "a": "Dexametasona / Neomicina",
+   "p": "Solución gotero 1/3.5 mg por mL · 10 mL",
+   "u": "Gotas para ojos: conjuntivitis e inflamación con infección.",
+   "c": [
+    "ojos"
+   ],
+   "s": [
+    "ojo_rojo",
+    "ojo_inflamacion"
+   ],
+   "pub": "todos",
+   "rx": true,
+   "q": 1,
+   "unit": "gotero",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s040"
+  },
+  {
+   "n": "Alesiram",
+   "a": "Tobramicina / Dexametasona",
+   "p": "Ungüento oftálmico 3/1 mg por g",
+   "u": "Infección e inflamación de ojos.",
+   "c": [
+    "ojos"
+   ],
+   "s": [
+    "ojo_rojo",
+    "ojo_inflamacion"
+   ],
+   "pub": "todos",
+   "rx": true,
+   "q": 1,
+   "unit": "tubo",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s041"
+  },
+  {
+   "n": "Diclofenaco oftálmico",
+   "a": "Diclofenaco",
+   "p": "Solución oftálmica 1 mg/mL · gotero 5 mL",
+   "u": "Dolor e inflamación de ojos.",
+   "c": [
+    "ojos"
+   ],
+   "s": [
+    "ojo_inflamacion"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "gotero",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s042"
+  },
+  {
+   "n": "Hyabak",
+   "a": "Hialuronato de sodio 0.15 %",
+   "p": "Solución oftálmica · 10 mL",
+   "u": "Lágrima artificial: ojo seco, ardor e irritación.",
+   "c": [
+    "ojos"
+   ],
+   "s": [
+    "ojo_seco"
+   ],
+   "pub": "todos",
+   "rx": false,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s043"
+  },
+  {
+   "n": "Soldrin Ótico",
+   "a": "Cloranfenicol / Benzocaína / corticoide",
+   "p": "Solución ótica · gotero",
+   "u": "Gotas para oído: dolor e infección de oído.",
+   "c": [
+    "oidos"
+   ],
+   "s": [
+    "infeccion_oido"
+   ],
+   "pub": "todos",
+   "rx": true,
+   "q": 1,
+   "unit": "gotero",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s044"
+  },
+  {
+   "n": "Synalar-Ó",
+   "a": "Solución ótica",
+   "p": "Gotero 10 mL",
+   "u": "Gotas para oído: infección, inflamación y comezón del oído.",
+   "c": [
+    "oidos"
+   ],
+   "s": [
+    "infeccion_oido"
+   ],
+   "pub": "todos",
+   "rx": true,
+   "q": 1,
+   "unit": "gotero",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s045"
+  },
+  {
+   "n": "Nutracort",
+   "a": "Hidrocortisona 1 %",
+   "p": "Crema · tubo 60 g",
+   "u": "Comezón e irritación de piel, piquetes, ronchas, dermatitis.",
+   "c": [
+    "piel",
+    "alergia"
+   ],
+   "s": [
+    "piel_comezon",
+    "alergia"
+   ],
+   "pub": "todos",
+   "rx": false,
+   "q": 1,
+   "unit": "tubo",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s046"
+  },
+  {
+   "n": "Benzocaína SímiBaby",
+   "a": "Benzocaína",
+   "p": "Gel para encías · tubo 10 g",
+   "u": "Dolor de encías cuando le están saliendo los dientes al bebé.",
+   "c": [
+    "boca"
+   ],
+   "s": [
+    "denticion"
+   ],
+   "pub": "infantil",
+   "rx": false,
+   "q": 1,
+   "unit": "tubo",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s047"
+  },
+  {
+   "n": "Hydrasor",
+   "a": "Electrolitos orales",
+   "p": "Polvo sabor limón · sobre 28.4 g",
+   "u": "Suero oral para evitar la deshidratación por diarrea o vómito.",
+   "c": [
+    "hidratacion",
+    "diarrea"
+   ],
+   "s": [
+    "deshidratacion",
+    "diarrea",
+    "vomito"
+   ],
+   "pub": "todos",
+   "rx": false,
+   "q": 1,
+   "unit": "sobre",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s048"
+  },
+  {
+   "n": "Sinuberase",
+   "a": "Esporas de Bacillus clausii",
+   "p": "Ampolletas bebibles",
+   "u": "Repone la flora intestinal en diarrea o durante y después de antibióticos.",
+   "c": [
+    "suplementos",
+    "diarrea"
+   ],
+   "s": [
+    "flora",
+    "diarrea"
+   ],
+   "pub": "todos",
+   "rx": false,
+   "q": 5,
+   "unit": "ampolletas",
+   "cad": "2027-09",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s049"
+  },
+  {
+   "n": "Rapid-MT",
+   "a": "Probióticos / Prebióticos / Cúrcuma",
+   "p": "Cápsulas · 30",
+   "u": "Suplemento para la flora intestinal.",
+   "c": [
+    "suplementos"
+   ],
+   "s": [
+    "flora"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s050"
+  },
+  {
+   "n": "Multi Gomi Kids",
+   "a": "Probióticos / Prebióticos",
+   "p": "Gomitas · 60",
+   "u": "Suplemento de probióticos para niños.",
+   "c": [
+    "suplementos"
+   ],
+   "s": [
+    "flora"
+   ],
+   "pub": "infantil",
+   "rx": false,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s051"
+  },
+  {
+   "n": "Glicinato de magnesio (Biomiral)",
+   "a": "Magnesio / L-teanina / Zinc / B6 / D3",
+   "p": "Cápsulas · 30",
+   "u": "Suplemento: relajación, descanso y calambres.",
+   "c": [
+    "suplementos"
+   ],
+   "s": [
+    "sueno",
+    "dolor_muscular"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s052"
+  },
+  {
+   "n": "Amlodipino",
+   "a": "Amlodipino",
+   "p": "Tabletas 5 mg · frasco con 100",
+   "u": "Presión arterial alta.",
+   "c": [
+    "presion"
+   ],
+   "s": [
+    "presion"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s053"
+  },
+  {
+   "n": "Losartán / Hidroclorotiazida",
+   "a": "Losartán / Hidroclorotiazida",
+   "p": "Tabletas 100/25 mg",
+   "u": "Presión arterial alta.",
+   "c": [
+    "presion"
+   ],
+   "s": [
+    "presion"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s054"
+  },
+  {
+   "n": "Telmisartán",
+   "a": "Telmisartán",
+   "p": "Tabletas 40 mg · caja con 28",
+   "u": "Presión arterial alta.",
+   "c": [
+    "presion"
+   ],
+   "s": [
+    "presion"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s055"
+  },
+  {
+   "n": "Bicartial",
+   "a": "Amlodipino / Losartán",
+   "p": "Cápsulas 5/100 mg",
+   "u": "Presión arterial alta.",
+   "c": [
+    "presion"
+   ],
+   "s": [
+    "presion"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s056"
+  },
+  {
+   "n": "Escitalopram",
+   "a": "Escitalopram",
+   "p": "Tabletas 10 mg · caja con 28",
+   "u": "Depresión y ansiedad.",
+   "c": [
+    "animo"
+   ],
+   "s": [
+    "animo"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s057"
+  },
+  {
+   "n": "Fluoxetina",
+   "a": "Fluoxetina",
+   "p": "Cápsulas 20 mg · frasco con 28",
+   "u": "Depresión y ansiedad.",
+   "c": [
+    "animo"
+   ],
+   "s": [
+    "animo"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s058"
+  },
+  {
+   "n": "Zatin",
+   "a": "Fluoxetina",
+   "p": "Cápsulas 20 mg · blíster",
+   "u": "Depresión y ansiedad.",
+   "c": [
+    "animo"
+   ],
+   "s": [
+    "animo"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "blíster",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s059"
+  },
+  {
+   "n": "Novial",
+   "a": "Desogestrel / Etinilestradiol",
+   "p": "Tabletas",
+   "u": "Anticonceptivo oral.",
+   "c": [
+    "otros"
+   ],
+   "s": [
+    "anticonceptivo"
+   ],
+   "pub": "adulto",
+   "rx": true,
+   "q": 1,
+   "unit": "caja",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s060"
+  },
+  {
+   "n": "Minoxidil 5 %",
+   "a": "Minoxidil",
+   "p": "Solución spray · 60 mL",
+   "u": "Caída de cabello (uso en cuero cabelludo).",
+   "c": [
+    "otros"
+   ],
+   "s": [
+    "cabello"
+   ],
+   "pub": "adulto",
+   "rx": false,
+   "q": 1,
+   "unit": "frasco",
+   "cad": "",
+   "nota": "",
+   "kw": "",
+   "pac": "",
+   "dosis": "",
+   "doc": "",
+   "frec": "",
+   "src": "",
+   "srcName": "",
+   "key": "s061"
+  }
+ ]
+}
