@@ -102,6 +102,7 @@ details.cat[open] summary{border-bottom:1px solid var(--line)}
 
 .toolbar{display:flex;gap:8px;flex-wrap:wrap}
 .btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 13px;font-size:14px;font-weight:600}
+a.btn{text-decoration:none;color:var(--ink);display:inline-flex;align-items:center}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .btn.danger{color:var(--bad);border-color:var(--bad)}
 select.filter{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 10px;font-size:14px;max-width:100%}
@@ -129,6 +130,18 @@ nav.tabs button[aria-selected="true"]{color:var(--accent);font-weight:700}
 .checks label{display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:13px;color:var(--ink);font-weight:500}
 .panel .actions{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap}
 .confirm{background:var(--bad-soft);color:var(--bad);border-radius:10px;padding:10px;font-size:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rxbox{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13.5px;display:grid;grid-template-columns:auto 1fr;gap:2px 10px}
+.rxbox dt{color:var(--muted);font-weight:600}
+.rxbox dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.src{font-size:12.5px;color:var(--muted)}
+.src a{color:var(--accent)}
+.lookup{border:1px dashed var(--accent);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--accent-soft)}
+.lookup .hint{font-size:13px;color:var(--muted)}
+.lk-res{display:flex;flex-direction:column;gap:8px}
+.lk-item{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:13.5px;display:flex;flex-direction:column;gap:6px}
+.lk-item b{font-size:14px}
+.lk-item .txt{max-height:9em;overflow:auto}
+.sec{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;border-top:1px solid var(--line);padding-top:10px;margin-top:4px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);
   padding:9px 14px;border-radius:10px;font-size:14px;z-index:30}
 @media (max-width:420px){.grid2{grid-template-columns:1fr}}
@@ -161,7 +174,7 @@ nav.tabs button[aria-selected="true"]{color:var(--accent);font-weight:700}
     </div>
     <div id="found" class="found" hidden></div>
     <div id="results" class="list"></div>
-    <p class="disclaimer">Guía de uso general para saber qué tienes en casa; no sustituye la consulta. Revisa siempre la dosis en la caja o instructivo. Los marcados <b>Requiere receta</b> (antibióticos, presión, ánimo, gotas con antibiótico) úsalos solo con indicación médica.</p>
+    <p class="disclaimer">Al agregar una medicina, el botón “Buscar para qué sirve” consulta el prospecto oficial (CIMA) y Wikipedia y guarda el enlace a la fuente. Guía de uso general para saber qué tienes en casa; no sustituye la consulta. Revisa siempre la dosis en la caja o instructivo. Los marcados <b>Requiere receta</b> (antibióticos, presión, ánimo, gotas con antibiótico) úsalos solo con indicación médica.</p>
   </section>
 
   <!-- POR PADECIMIENTO -->
@@ -284,7 +297,7 @@ var SYM={
 var QUICK=["Dolor de cabeza","Fiebre","Tos","Gripe","Diarrea","Dolor de estómago","Vómito","Mareo","Acidez","Alergia","Infección urinaria","Dolor muscular","Oído","Ojo rojo","Comezón","Dentición"];
 
 /* ---------- Inventario inicial (identificado de tus fotos, 26-oct-2026) ---------- */
-function M(n,a,p,u,c,s,pub,rx,q,unit,cad,nota){return {n:n,a:a,p:p,u:u,c:c,s:s,pub:pub,rx:!!rx,q:q,unit:unit||"envase",cad:cad||"",nota:nota||"",kw:""};}
+function M(n,a,p,u,c,s,pub,rx,q,unit,cad,nota){return {n:n,a:a,p:p,u:u,c:c,s:s,pub:pub,rx:!!rx,q:q,unit:unit||"envase",cad:cad||"",nota:nota||"",kw:"",pac:"",dosis:"",doc:"",frec:"",src:"",srcName:""};}
 var SEED=[
 M("Hidrasec","Racecadotrilo","Cápsulas 100 mg · caja con 9","Diarrea aguda: disminuye las evacuaciones líquidas.",["diarrea"],["diarrea"],"adulto",0,1,"caja","","Escrito en la caja: Antidiarreico"),
 M("Azitromicina","Azitromicina","Tabletas 500 mg · caja con 3","Antibiótico para infecciones de garganta, bronquios, oído y piel.",["antibiotico"],["garganta","infeccion_respiratoria","infeccion_oido","infeccion_piel"],"adulto",1,1,"caja"),
@@ -391,7 +404,8 @@ function detect(q){
   if(tags.dolor_general&&Object.keys(tags).length>1)delete tags.dolor_general;
   return Object.keys(tags);
 }
-function hay(m){return norm([m.n,m.a,m.u,m.kw,m.nota].join(" "))}
+function hay(m){return norm([m.n,m.a,m.u,m.kw,m.nota,m.pac,m.doc,m.dosis].join(" "))}
+function fmtFecha(d){if(!d)return "";var p=d.split("-");return (+p[2])+" "+MESES[(+p[1])-1]+" "+p[0]}
 function search(raw){
   var q=norm(raw);if(!q)return null;
   var tags=detect(q);
@@ -433,7 +447,13 @@ function card(m){
    '<div class="use">'+esc(m.u)+'</div>'+
    (m.p?'<div class="pres">'+esc(m.p)+'</div>':'')+
    (m.nota?'<div class="note">'+esc(m.nota)+'</div>':'')+
+   ((m.pac||m.dosis||m.doc||m.frec)?'<dl class="rxbox">'+
+     (m.pac?'<dt>Para</dt><dd>'+esc(m.pac)+'</dd>':'')+
+     (m.dosis?'<dt>Dosis</dt><dd>'+esc(m.dosis)+'</dd>':'')+
+     (m.doc?'<dt>Doctor</dt><dd>'+esc(m.doc)+'</dd>':'')+
+     (m.frec?'<dt>Recetado</dt><dd>'+esc(fmtFecha(m.frec))+'</dd>':'')+'</dl>':'')+
    badges(m)+
+   (m.src?'<div class="src">Fuente: <a href="'+esc(m.src)+'" target="_blank" rel="noopener">'+esc(m.srcName||"ver fuente")+'</a></div>':'')+
    '<div class="row2"><div class="qty"><button type="button" data-act="dec" aria-label="Quitar uno">−</button><span>'+esc(qtyText(m))+'</span><button type="button" data-act="inc" aria-label="Agregar uno">+</button></div>'+
    '<button class="edit" type="button" data-act="edit">Editar</button></div></article>';
 }
@@ -478,9 +498,17 @@ function renderCats(){
   var box=document.getElementById("cats");box.innerHTML=h;
   Array.prototype.forEach.call(box.querySelectorAll("details"),function(d){if(keep[d.querySelector("summary span").textContent])d.open=true});
 }
+var BASEOPTS=null;
+function people(field){var s={};meds.forEach(function(m){var v=(m[field]||"").trim();if(v)s[v]=1});return Object.keys(s).sort(function(a,b){return a.localeCompare(b,"es")})}
 function renderInv(){
-  var f=document.getElementById("invFilter").value;
+  var sel=document.getElementById("invFilter");
+  if(BASEOPTS===null)BASEOPTS=sel.innerHTML;
+  var cur=sel.value,pp=people("pac");
+  sel.innerHTML=BASEOPTS+(pp.length?'<optgroup label="Recetadas a">'+pp.map(function(p){return '<option value="pac:'+esc(p)+'">'+esc(p)+'</option>'}).join("")+'</optgroup>':'');
+  sel.value=cur;if(sel.value!==cur)sel.value="all";
+  var f=sel.value;
   var list=meds.filter(function(m){
+    if(f.indexOf("pac:")===0)return (m.pac||"").trim()===f.slice(4);
     if(f==="kid")return m.pub==="infantil";
     if(f==="rx")return m.rx;
     if(f==="exp")return !!expState(m);
@@ -519,6 +547,57 @@ document.querySelector("main").addEventListener("click",function(e){
   else if(b.dataset.act==="edit")openEdit(m);
 });
 
+/* ---------- Búsqueda en fuentes en línea ---------- */
+var TAG2CAT={fiebre:"fiebre",dolor_general:"fiebre",dolor_dental:"fiebre",dolor_cabeza:"cabeza",migrana:"cabeza",dolor_muscular:"musculo",dolor_articular:"musculo",
+ colico:"colico",colico_menstrual:"colico",gases:"colico",diarrea:"diarrea",parasitos:"diarrea",infeccion_intestinal:"diarrea",nausea:"nausea",vomito:"nausea",mareo:"nausea",
+ acidez:"acidez",gripe:"gripe",congestion:"gripe",garganta:"gripe",tos:"tos",flemas:"tos",alergia:"alergia",infeccion_urinaria:"antibiotico",infeccion_respiratoria:"antibiotico",
+ infeccion_oido:"oidos",infeccion_piel:"piel",piel_comezon:"piel",ojo_rojo:"ojos",ojo_inflamacion:"ojos",ojo_seco:"ojos",denticion:"boca",presion:"presion",animo:"animo",
+ deshidratacion:"hidratacion",flora:"suplementos",sueno:"suplementos",anticonceptivo:"otros",cabello:"otros"};
+var EXTRA=[["antibiotico","antibiotico"],["infecciones urinarias","infeccion_urinaria"],["tracto urinario","infeccion_urinaria"],["infecciones respiratorias","infeccion_respiratoria"],
+ ["infecciones de la piel","infeccion_piel"],["hipertension arterial","presion"],["antiemetico","nausea"],["antihistaminico","alergia"],["analgesico","dolor_general"],
+ ["antipiretico","fiebre"],["antiinflamatorio","dolor_articular"],["antidepresivo","animo"],["antiacido","acidez"],["antidiarreico","diarrea"],["antitusivo","tos"],
+ ["mucolitico","flemas"],["expectorante","flemas"],["antiespasmodico","colico"],["espasmo","colico"],["otitis","infeccion_oido"],["conjuntivitis","ojo_rojo"],["dermatitis","piel_comezon"],["ulcera","acidez"]];
+function classify(text){
+  var t=norm(text).replace(/(picor|picazon|lagrimeo|comezon|irritacion) (de|en) (la )?(nariz|ojos?|garganta)( y (los )?(ojos|nariz|garganta))?/g," ").replace(/nariz y ojos|ojos llorosos/g," "),tags=detect(t);
+  EXTRA.forEach(function(e){if(t.indexOf(e[0])>-1&&tags.indexOf(e[1])<0)tags.push(e[1])});
+  var cats={};tags.forEach(function(g){if(TAG2CAT[g])cats[TAG2CAT[g]]=1});
+  if(t.indexOf("antibiotico")>-1)cats.antibiotico=1;
+  return {tags:tags,cats:Object.keys(cats)};
+}
+function plain(html){var d=new DOMParser().parseFromString("<div>"+html+"</div>","text/html");return (d.body.textContent||"").replace(/\s+/g," ").trim()}
+function clip(t,max){if(t.length<=max)return t;var c=t.slice(0,max),i=c.lastIndexOf(". ");return (i>max*0.4?c.slice(0,i+1):c+"…")}
+function cap(s){s=(s||"").toLowerCase();return s.replace(/(^|[\s,\/])([a-záéíóúñ])/g,function(m,a,b){return a+b.toUpperCase()})}
+function timed(url,opt){var ac=new AbortController(),t=setTimeout(function(){ac.abort()},12000);opt=opt||{};opt.signal=ac.signal;
+  return fetch(url,opt).then(function(r){clearTimeout(t);if(!r.ok)throw new Error("HTTP "+r.status);return r})}
+function fromCima(term){
+  var base="https://cima.aemps.es/cima/rest/";
+  var q=function(p){return timed(base+"medicamentos?"+p+"="+encodeURIComponent(term)).then(function(r){return r.json()}).then(function(j){return (j&&j.resultados)||[]})};
+  return q("practiv1").then(function(r){return r.length?r:q("nombre")}).then(function(list){
+    if(!list.length)return null;
+    var r=list.filter(function(x){return (x.docs||[]).some(function(d){return d.tipo===2})})[0]||list[0];
+    return timed(base+"docSegmentado/contenido/2?nregistro="+encodeURIComponent(r.nregistro)+"&seccion=1",{headers:{Accept:"application/json"}})
+      .then(function(res){return res.text()})
+      .then(function(txt){var out="";try{var j=JSON.parse(txt);(Array.isArray(j)?j:[j]).forEach(function(s){out+=" "+plain(s.contenido||s.texto||"")})}catch(e){out=plain(txt)}return out.trim()})
+      .catch(function(){return ""})
+      .then(function(text){
+        text=text.replace(/^1\.?\s*Qu[ée] es .{0,120}?y para qu[ée] se utiliza\s*/i,"");
+        return {fuente:"CIMA · Agencia Española de Medicamentos (prospecto oficial)",url:"https://cima.aemps.es/cima/publico/detalle.html?nregistro="+r.nregistro,
+          titulo:r.nombre,activo:cap(r.pactivos||""),texto:clip(text,600)||"",rx:!!r.receta};
+      });
+  });
+}
+function fromWiki(term){
+  var api="https://es.wikipedia.org/w/api.php?origin=*&format=json&action=query&list=search&srlimit=1&srsearch="+encodeURIComponent(term+" fármaco");
+  return timed(api).then(function(r){return r.json()}).then(function(j){
+    var hit=j&&j.query&&j.query.search&&j.query.search[0];if(!hit)return null;
+    return timed("https://es.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(hit.title.replace(/ /g,"_"))).then(function(r){return r.json()}).then(function(s){
+      if(!s.extract)return null;
+      return {fuente:"Wikipedia en español",url:(s.content_urls&&s.content_urls.mobile&&s.content_urls.mobile.page)||("https://es.wikipedia.org/wiki/"+encodeURIComponent(hit.title)),
+        titulo:s.title,activo:"",texto:clip(s.extract,600),rx:null};
+    });
+  });
+}
+
 /* ---------- Editar / agregar ---------- */
 var sheet=document.getElementById("sheet"),panel=document.getElementById("panel");
 function closeSheet(){sheet.hidden=true;panel.innerHTML="";document.body.style.overflow=""}
@@ -526,49 +605,107 @@ sheet.addEventListener("click",function(e){if(e.target===sheet)closeSheet()});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!sheet.hidden)closeSheet()});
 function openEdit(m){
   var isNew=!m;
-  m=m||{id:"",n:"",a:"",p:"",u:"",c:[],s:[],pub:"todos",rx:false,q:1,unit:"envase",cad:"",nota:"",kw:""};
+  m=m||{id:"",n:"",a:"",p:"",u:"",c:[],s:[],pub:"todos",rx:false,q:1,unit:"envase",cad:"",nota:"",kw:"",pac:"",dosis:"",doc:"",frec:"",src:"",srcName:""};
+  var dl=function(id,arr){return '<datalist id="'+id+'">'+arr.map(function(v){return '<option value="'+esc(v)+'">'}).join("")+'</datalist>'};
+  var draftSrc={src:m.src||"",srcName:m.srcName||"",s:(m.s||[]).slice()};
   panel.innerHTML='<h2 id="sheetTitle">'+(isNew?"Agregar medicina":"Editar medicina")+'</h2>'+
-   '<form id="ef" novalidate>'+
-   '<div style="display:flex;flex-direction:column;gap:10px">'+
-   '<div class="f"><label for="e_n">Nombre</label><input id="e_n" required value="'+esc(m.n)+'"></div>'+
-   '<div class="f"><label for="e_a">Sustancia activa</label><input id="e_a" value="'+esc(m.a)+'"></div>'+
-   '<div class="f"><label for="e_p">Presentación</label><input id="e_p" placeholder="Ej. Tabletas 500 mg · caja con 20" value="'+esc(m.p)+'"></div>'+
+   '<form id="ef" novalidate><div style="display:flex;flex-direction:column;gap:10px">'+
+   '<div class="f"><label for="e_n">Nombre (como dice la caja)</label><input id="e_n" required value="'+esc(m.n)+'"></div>'+
+   '<div class="f"><label for="e_a">Sustancia activa (letra chica bajo el nombre)</label><input id="e_a" value="'+esc(m.a)+'" placeholder="Ej. Metoclopramida"></div>'+
+   '<div class="lookup"><div class="toolbar"><button class="btn primary" type="button" id="lkBtn">Buscar para qué sirve</button>'+
+     '<a class="btn" id="lkG" target="_blank" rel="noopener" href="#">Abrir en Google</a></div>'+
+     '<div class="hint" id="lkHint">Busca en el prospecto oficial (CIMA, agencia de medicamentos de España) y en Wikipedia. Funciona mejor con la sustancia activa. Necesita internet.</div>'+
+     '<div class="lk-res" id="lkRes"></div></div>'+
    '<div class="f"><label for="e_u">Para qué sirve</label><textarea id="e_u">'+esc(m.u)+'</textarea></div>'+
-   '<div class="f"><label>Clasificación (por qué cura)</label><div class="checks">'+CATS.map(function(c){return '<label><input type="checkbox" name="cat" value="'+c[0]+'"'+(m.c.indexOf(c[0])>-1?" checked":"")+'>'+esc(c[1])+'</label>'}).join("")+'</div></div>'+
-   '<div class="f"><label for="e_kw">Síntomas o palabras para encontrarla</label><input id="e_kw" placeholder="Ej. dolor de cabeza, fiebre" value="'+esc(m.kw||"")+'"></div>'+
+   '<div class="src" id="e_srcv">'+(m.src?'Fuente: <a href="'+esc(m.src)+'" target="_blank" rel="noopener">'+esc(m.srcName||"ver fuente")+'</a>':'')+'</div>'+
+   '<div class="f"><label for="e_p">Presentación</label><input id="e_p" placeholder="Ej. Tabletas 500 mg · caja con 20" value="'+esc(m.p)+'"></div>'+
+   '<div class="f"><label>Clasificación (por qué cura)</label><div class="checks" id="e_cats">'+CATS.map(function(c){return '<label><input type="checkbox" name="cat" value="'+c[0]+'"'+(m.c.indexOf(c[0])>-1?" checked":"")+'>'+esc(c[1])+'</label>'}).join("")+'</div></div>'+
+   '<div class="f"><label for="e_kw">Síntomas o palabras extra para encontrarla</label><input id="e_kw" placeholder="Ej. dolor de cabeza, fiebre" value="'+esc(m.kw||"")+'"></div>'+
+   '<div class="sec">Receta</div>'+
+   '<div class="grid2"><div class="f"><label for="e_pac">Recetada a</label><input id="e_pac" list="dl_pac" value="'+esc(m.pac||"")+'" placeholder="Nombre de la persona"></div>'+
+   '<div class="f"><label for="e_frec">Fecha de la receta</label><input id="e_frec" type="date" value="'+esc(m.frec||"")+'"></div></div>'+
+   '<div class="f"><label for="e_dosis">Dosis indicada</label><input id="e_dosis" value="'+esc(m.dosis||"")+'" placeholder="Ej. 1 tableta cada 8 horas por 7 días"></div>'+
+   '<div class="f"><label for="e_doc">Doctor</label><input id="e_doc" list="dl_doc" value="'+esc(m.doc||"")+'" placeholder="Nombre del doctor"></div>'+
+   dl("dl_pac",people("pac"))+dl("dl_doc",people("doc"))+
+   '<div class="sec">Existencia</div>'+
    '<div class="grid2"><div class="f"><label for="e_q">Cantidad</label><input id="e_q" type="number" min="0" step="1" inputmode="numeric" value="'+esc(m.q)+'"></div>'+
    '<div class="f"><label for="e_unit">Unidad</label><input id="e_unit" value="'+esc(m.unit)+'" placeholder="caja, frasco, tabletas…"></div></div>'+
    '<div class="grid2"><div class="f"><label for="e_cad">Caducidad (mes y año)</label><input id="e_cad" type="month" value="'+esc(m.cad)+'"></div>'+
    '<div class="f"><label for="e_pub">Para</label><select id="e_pub"><option value="todos">Adultos y niños</option><option value="adulto">Adulto</option><option value="infantil">Infantil</option></select></div></div>'+
-   '<label class="checks" style="display:flex"><label><input type="checkbox" id="e_rx"'+(m.rx?" checked":"")+'>Requiere receta</label></label>'+
-   '<div class="f"><label for="e_nota">Nota</label><input id="e_nota" value="'+esc(m.nota)+'" placeholder="Ej. 1 en la mañana y 1 en la noche"></div>'+
+   '<div class="checks"><label><input type="checkbox" id="e_rx"'+(m.rx?" checked":"")+'>Requiere receta</label></div>'+
+   '<div class="f"><label for="e_nota">Nota</label><input id="e_nota" value="'+esc(m.nota)+'" placeholder="Cualquier indicación extra"></div>'+
    '<div id="delBox" class="confirm" hidden>¿Eliminar “'+esc(m.n)+'” del inventario? <button class="btn danger" type="button" id="delYes">Sí, eliminar</button><button class="btn" type="button" id="delNo">Cancelar</button></div>'+
    '<div class="actions"><div class="toolbar">'+(isNew?'':'<button class="btn danger" type="button" id="delBtn">Eliminar</button>')+'</div>'+
    '<div class="toolbar"><button class="btn" type="button" id="cancelBtn">Cancelar</button><button class="btn primary" type="submit">Guardar</button></div></div>'+
    '</div></form>';
-  panel.querySelector("#e_pub").value=m.pub;
+  var $=function(s){return panel.querySelector(s)};
+  $("#e_pub").value=m.pub;
   sheet.hidden=false;document.body.style.overflow="hidden";
-  panel.querySelector("#cancelBtn").onclick=closeSheet;
+  $("#cancelBtn").onclick=closeSheet;
+  var term=function(){return ($("#e_a").value.trim()||$("#e_n").value.trim())};
+  var updG=function(){$("#lkG").href="https://www.google.com/search?q="+encodeURIComponent(term()+" para qué sirve")};
+  $("#e_a").addEventListener("input",updG);$("#e_n").addEventListener("input",updG);updG();
+  $("#lkBtn").onclick=function(){
+    var t=term(),res=$("#lkRes"),hint=$("#lkHint");
+    if(!t){hint.textContent="Escribe primero el nombre o la sustancia activa.";return}
+    if(navigator.onLine===false){hint.textContent="Sin internet. Conéctate para buscar, o escribe la información a mano.";return}
+    hint.textContent="Buscando “"+t+"”…";res.innerHTML="";
+    var found=[];
+    var show=function(r){
+      if(!r||(!r.texto&&!r.activo))return;
+      found.push(r);var i=found.length-1;
+      var cl=classify(r.texto+" "+r.titulo);
+      r._cl=cl;
+      var div=document.createElement("div");div.className="lk-item";
+      div.innerHTML='<b>'+esc(r.fuente)+'</b>'+(r.titulo?'<span class="src">'+esc(r.titulo)+'</span>':'')+
+        (r.activo?'<span>Sustancia activa: '+esc(r.activo)+'</span>':'')+
+        '<div class="txt">'+esc(r.texto||"(sin texto de uso)")+'</div>'+
+        (cl.cats.length?'<span class="src">Clasificación sugerida: '+esc(cl.cats.map(function(c){return CATNAME[c]}).join(", "))+'</span>':'')+
+        (r.rx===true?'<span class="src">En España se vende con receta.</span>':'')+
+        '<div class="toolbar"><button class="btn primary" type="button" data-use="'+i+'">Usar esta información</button><a class="btn" href="'+esc(r.url)+'" target="_blank" rel="noopener">Ver fuente</a></div>';
+      div.__r=r;res.appendChild(div);
+    };
+    Promise.allSettled([fromCima(t).then(show),fromWiki(t).then(show)]).then(function(){
+      hint.textContent=found.length?"Revisa y toca “Usar esta información”. Puedes corregir cualquier campo antes de guardar."
+        :"No encontré información en línea para “"+t+"”. Prueba con la sustancia activa o usa “Abrir en Google”.";
+    });
+  };
+  $("#lkRes").addEventListener("click",function(e){
+    var b=e.target.closest("[data-use]");if(!b)return;
+    var item=b.closest(".lk-item"),r=item.__r;if(!r)return;
+    if(r.activo&&!$("#e_a").value.trim())$("#e_a").value=r.activo;
+    if(r.texto)$("#e_u").value=r.texto;
+    if(r.rx===true)$("#e_rx").checked=true;
+    var cl=r._cl||{cats:[],tags:[]};
+    Array.prototype.forEach.call(panel.querySelectorAll('input[name="cat"]'),function(x){if(cl.cats.indexOf(x.value)>-1)x.checked=true});
+    cl.tags.forEach(function(t){if(draftSrc.s.indexOf(t)<0)draftSrc.s.push(t)});
+    draftSrc.src=r.url;draftSrc.srcName=r.fuente;
+    $("#e_srcv").innerHTML='Fuente: <a href="'+esc(r.url)+'" target="_blank" rel="noopener">'+esc(r.fuente)+'</a>';
+    toast("Información aplicada. Revisa y guarda.");
+  });
   if(!isNew){
-    panel.querySelector("#delBtn").onclick=function(){panel.querySelector("#delBox").hidden=false};
-    panel.querySelector("#delNo").onclick=function(){panel.querySelector("#delBox").hidden=true};
-    panel.querySelector("#delYes").onclick=function(){meds=meds.filter(function(x){return x.id!==m.id});save();closeSheet();renderAll();toast("Eliminado")};
+    $("#delBtn").onclick=function(){$("#delBox").hidden=false};
+    $("#delNo").onclick=function(){$("#delBox").hidden=true};
+    $("#delYes").onclick=function(){meds=meds.filter(function(x){return x.id!==m.id});save();closeSheet();renderAll();toast("Eliminado")};
   }
-  panel.querySelector("#ef").addEventListener("submit",function(e){
+  $("#ef").addEventListener("submit",function(e){
     e.preventDefault();
-    var g=function(id){return panel.querySelector(id).value.trim()};
-    var n=g("#e_n");if(!n){panel.querySelector("#e_n").focus();toast("Escribe el nombre");return}
-    var o=isNew?{id:uid(),s:[]}:m;
+    var g=function(id){return $(id).value.trim()};
+    var n=g("#e_n");if(!n){$("#e_n").focus();toast("Escribe el nombre");return}
+    var o=isNew?{id:uid()}:m;
     o.n=n;o.a=g("#e_a");o.p=g("#e_p");o.u=g("#e_u");o.kw=g("#e_kw");o.nota=g("#e_nota");
+    o.pac=g("#e_pac");o.dosis=g("#e_dosis");o.doc=g("#e_doc");o.frec=g("#e_frec");
     o.q=Math.max(0,parseFloat(g("#e_q"))||0);o.unit=g("#e_unit")||"envase";o.cad=g("#e_cad");
-    o.pub=panel.querySelector("#e_pub").value;o.rx=panel.querySelector("#e_rx").checked;
+    o.pub=$("#e_pub").value;o.rx=$("#e_rx").checked;
     o.c=Array.prototype.map.call(panel.querySelectorAll('input[name="cat"]:checked'),function(x){return x.value});
     if(!o.c.length)o.c=["otros"];
-    var t=detect(norm(o.kw+" "+o.u));t.forEach(function(x){if(o.s.indexOf(x)<0)o.s.push(x)});
+    o.s=draftSrc.s.slice();
+    detect(norm(o.kw+" "+o.u)).forEach(function(x){if(o.s.indexOf(x)<0)o.s.push(x)});
+    o.src=draftSrc.src;o.srcName=draftSrc.srcName;
     if(isNew)meds.push(o);
     save();closeSheet();renderAll();toast(isNew?"Medicina agregada":"Cambios guardados");
   });
-  setTimeout(function(){panel.querySelector(isNew?"#e_n":"#e_q").focus()},50);
+  setTimeout(function(){$(isNew?"#e_n":"#e_q").focus()},50);
 }
 document.getElementById("addBtn").addEventListener("click",function(){openEdit(null)});
 
