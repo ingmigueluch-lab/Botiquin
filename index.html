@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14614a">
+<title>Botiquín de Casa</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Botiquín">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+/* Layout: una columna tipo app de bolsillo; buscador fijo arriba, pestañas abajo. Todo funciona sin internet. */
+:root{
+  --bg:#f3f6f4; --surface:#ffffff; --ink:#15211c; --muted:#5d6e66; --line:#d8e2dc;
+  --accent:#14614a; --accent-soft:#e1efe8; --accent-ink:#ffffff;
+  --warn:#9a5b00; --warn-soft:#fbefd9; --bad:#b3261e; --bad-soft:#fbe4e2; --kid:#6d3fb0; --kid-soft:#efe7fa;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1714; --surface:#17221e; --ink:#e4ede8; --muted:#97aaa1; --line:#2a3832;
+  --accent:#5cc49c; --accent-soft:#1b3a2f; --accent-ink:#06150f;
+  --warn:#f0b45a; --warn-soft:#3a2c14; --bad:#ff8a80; --bad-soft:#3d1c1a; --kid:#c3a2f5; --kid-soft:#2b2140; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1714; --surface:#17221e; --ink:#e4ede8; --muted:#97aaa1; --line:#2a3832;
+  --accent:#5cc49c; --accent-soft:#1b3a2f; --accent-ink:#06150f;
+  --warn:#f0b45a; --warn-soft:#3a2c14; --bad:#ff8a80; --bad-soft:#3d1c1a; --kid:#c3a2f5; --kid-soft:#2b2140; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--font);-webkit-text-size-adjust:100%;
+  padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+[hidden]{display:none!important}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+header.top{position:sticky;top:0;z-index:5;background:var(--accent);color:var(--accent-ink);padding-top:env(safe-area-inset-top,0px)}
+header.top .wrap{padding-block:14px 14px;display:flex;flex-direction:column;gap:10px}
+.brand{display:flex;align-items:center;gap:10px}
+.cross{width:28px;height:28px;flex:none}
+.brand h1{font-size:19px;margin:0;letter-spacing:.2px}
+.brand small{display:block;font-size:12px;opacity:.85;font-weight:400}
+.searchbox{position:relative}
+.searchbox input{width:100%;border:0;border-radius:12px;padding:13px 40px 13px 14px;background:var(--surface);color:var(--ink);font-size:16px}
+.searchbox button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--muted);font-size:20px;width:34px;height:34px}
+
+main .wrap{padding-block:14px 24px;display:flex;flex-direction:column;gap:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 12px;font-size:14px}
+.chip:hover{border-color:var(--accent)}
+.label{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin:0}
+.found{background:var(--accent-soft);border-radius:12px;padding:10px 12px;font-size:14px}
+.found b{color:var(--accent)}
+
+.alerts{display:flex;flex-wrap:wrap;gap:8px}
+.alert{border-radius:10px;padding:8px 12px;font-size:13.5px;border:0;text-align:left}
+.alert.bad{background:var(--bad-soft);color:var(--bad)}
+.alert.warn{background:var(--warn-soft);color:var(--warn)}
+
+.list{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.card.out{opacity:.62}
+.card .row1{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.card h3{margin:0;font-size:16.5px;line-height:1.25}
+.card .act{color:var(--muted);font-size:13.5px}
+.card .use{font-size:14.5px}
+.card .pres{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.card .note{font-size:13.5px;background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:5px 8px}
+.badges{display:flex;flex-wrap:wrap;gap:6px}
+.b{font-size:11.5px;font-weight:600;border-radius:6px;padding:2px 7px;letter-spacing:.02em}
+.b.kid{background:var(--kid-soft);color:var(--kid)}
+.b.adult{background:var(--accent-soft);color:var(--accent)}
+.b.rx{background:var(--bad-soft);color:var(--bad)}
+.b.exp{background:var(--bad);color:#fff}
+.b.soon{background:var(--warn-soft);color:var(--warn)}
+.b.empty{background:var(--line);color:var(--ink)}
+.row2{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.qty{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.qty button{border:0;background:var(--bg);width:36px;height:34px;font-size:18px}
+.qty span{min-width:72px;text-align:center;font-variant-numeric:tabular-nums;font-size:14px;padding:0 6px}
+.edit{border:0;background:none;color:var(--accent);font-weight:600;font-size:14px;padding:6px 4px}
+
+details.cat{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+details.cat summary{list-style:none;padding:13px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:600}
+details.cat summary::-webkit-details-marker{display:none}
+details.cat summary .n{font-weight:500;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+details.cat[open] summary{border-bottom:1px solid var(--line)}
+.catbody{padding:8px 14px 12px;display:flex;flex-direction:column}
+.mini{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.mini:last-child{border-bottom:0}
+.mini .l{min-width:0}
+.mini .l b{display:block}
+.mini .l span{color:var(--muted);font-size:13px}
+.mini .r{flex:none;text-align:right;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.catdesc{font-size:13px;color:var(--muted);padding:2px 0 6px}
+
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 13px;font-size:14px;font-weight:600}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+select.filter{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 10px;font-size:14px;max-width:100%}
+
+.disclaimer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.empty-state{text-align:center;color:var(--muted);padding:24px 8px;font-size:14px}
+
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs .wrap{display:grid;grid-template-columns:repeat(3,1fr)}
+nav.tabs button{border:0;background:none;padding:10px 4px 12px;font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+nav.tabs button svg{width:22px;height:22px}
+nav.tabs button[aria-selected="true"]{color:var(--accent);font-weight:700}
+
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
+.sheet .panel{background:var(--surface);width:100%;max-width:720px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;
+  padding:16px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:12px}
+.panel h2{margin:0;font-size:18px}
+.f{display:flex;flex-direction:column;gap:4px}
+.f label{font-size:13px;color:var(--muted);font-weight:600}
+.f input,.f textarea,.f select{border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:var(--bg);width:100%}
+.f textarea{min-height:64px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.checks{display:flex;flex-wrap:wrap;gap:6px}
+.checks label{display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:13px;color:var(--ink);font-weight:500}
+.panel .actions{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap}
+.confirm{background:var(--bad-soft);color:var(--bad);border-radius:10px;padding:10px;font-size:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);
+  padding:9px 14px;border-radius:10px;font-size:14px;z-index:30}
+@media (max-width:420px){.grid2{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:no-preference){.card,.chip,.btn{transition:border-color .15s}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <svg class="cross" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="7" fill="currentColor" opacity=".18"/><path d="M11 6h6v5h5v6h-5v5h-6v-5H6v-6h5z" fill="currentColor"/></svg>
+      <h1>Botiquín de Casa<small id="subtitle">Medicinas en casa</small></h1>
+    </div>
+    <div class="searchbox">
+      <input id="q" type="text" inputmode="search" placeholder="¿Qué sientes? Ej. dolor de cabeza, tos, diarrea…" autocomplete="off" enterkeyhint="search">
+      <button id="clear" type="button" aria-label="Borrar búsqueda" hidden>×</button>
+    </div>
+  </div>
+</header>
+
+<noscript><style>header.top .searchbox,nav.tabs,main{display:none!important}.ns{padding:16px;max-width:720px;margin:0 auto}.ns ul{padding-left:18px}.ns li{margin:4px 0}.ns-h{margin:18px 0 6px;color:var(--accent)}.ns-i{margin:6px 0}.ns-tip{background:var(--warn-soft);color:var(--warn);padding:10px;border-radius:10px}</style><div class="ns"><p class="ns-tip">Estás viendo la versión de consulta. Para buscar y editar el inventario, abre este archivo con Chrome o Safari.</p><h2>¿Qué tomo para…?</h2><p class="ns-i"><b>Dolor de cabeza:</b> Excedrin Migraña, Soltadol, Tabcin efervescente, Onexmol, Neo-Melubrina infantil, Paracetamol pediátrico, Dafloxen F, Paracetamol 650</p><p class="ns-i"><b>Fiebre:</b> Neo-Melubrina infantil, Paracetamol pediátrico, Dafloxen F, Soltadol, Tabcin efervescente, Paracetamol 650, Onexmol</p><p class="ns-i"><b>Dolor muscular:</b> Flexiver Compuesto, Exicort, Glicinato de magnesio (Biomiral), Onexmol</p><p class="ns-i"><b>Dolor de articulaciones:</b> Exicort, Flexiver Compuesto, Paracetamol 650, Onexmol</p><p class="ns-i"><b>Dolor de muela:</b> Exicort, Dafloxen F, Soltadol, Paracetamol 650, Acarbixin, Onexmol</p><p class="ns-i"><b>Cólico:</b> Floroglucinol, Clonixinato de lisina / Hioscina, Precicol, Espabion, Onexmol</p><p class="ns-i"><b>Cólico menstrual:</b> Floroglucinol, Clonixinato de lisina / Hioscina, Precicol, Onexmol</p><p class="ns-i"><b>Gases:</b> Espabion</p><p class="ns-i"><b>Diarrea:</b> Diosmectita (Iprikene), Hidrasec, Eskapar, Sinuberase, Hydrasor, Biotazol, Ciprofloxacino</p><p class="ns-i"><b>Parásitos:</b> Biotazol</p><p class="ns-i"><b>Náusea:</b> Dirpasid, Meclison</p><p class="ns-i"><b>Vómito:</b> Dirpasid, Hydrasor, Meclison</p><p class="ns-i"><b>Mareo:</b> Meclison</p><p class="ns-i"><b>Acidez:</b> Bicarbonato de sodio, Sal de uvas Picot, Dirpasid</p><p class="ns-i"><b>Gripe:</b> Laritol D, Tabcin efervescente, Vick VapoRub, Ungüento 666</p><p class="ns-i"><b>Congestión:</b> Mometasona spray nasal, Laritol D, Vick VapoRub, Tabcin efervescente, Ungüento 666</p><p class="ns-i"><b>Tos:</b> Drosequim infantil, Histiacil NF infantil, Vick VapoRub, Ungüento 666</p><p class="ns-i"><b>Flemas:</b> Drosequim infantil, Histiacil NF infantil, Ungüento 666</p><p class="ns-i"><b>Garganta:</b> Dicleophen, Azitromicina, Ungüento 666, Acarbixin, Ampicilina</p><p class="ns-i"><b>Alergia:</b> Erispan Compuesto pediátrico, Mometasona spray nasal, Nutracort, Laritol D</p><p class="ns-i"><b>Infección urinaria:</b> Ciprofloxacino, Bactiver, Bactrim suspensión, Trimetoprima / Sulfametoxazol suspensión, Trimetoprima / Sulfametoxazol tabletas, Clonixinato de lisina / Hioscina, Ampicilina, Acarbixin</p><p class="ns-i"><b>Oído:</b> Soldrin Ótico, Synalar-Ó, Ampicilina, Azitromicina, Bactiver, Bactrim suspensión, Trimetoprima / Sulfametoxazol suspensión, Trimetoprima / Sulfametoxazol tabletas, Acarbixin</p><p class="ns-i"><b>Infección de piel:</b> Berniver, Dicleophen, Azitromicina, Acarbixin</p><p class="ns-i"><b>Comezón:</b> Nutracort, Synalar-Ó</p><p class="ns-i"><b>Ojo rojo:</b> Alesiram, Dexametasona / Neomicina gotas</p><p class="ns-i"><b>Ojo seco:</b> Hyabak</p><p class="ns-i"><b>Dentición:</b> Benzocaína SímiBaby</p><p class="ns-i"><b>Deshidratación:</b> Hydrasor</p><p class="ns-i"><b>Presión alta:</b> Amlodipino, Bicartial, Losartán / Hidroclorotiazida, Telmisartán</p><h2>Por padecimiento</h2><h3 class="ns-h">Dolor y fiebre</h3><ul><li><b>Dafloxen F </b> (infantil): Infantil</li><li><b>Excedrin Migraña</b>: Migraña y dolor de cabeza.</li><li><b>Neo-Melubrina infantil </b> (infantil): Infantil</li><li><b>Onexmol</b>: Dolor de cabeza, muscular, dental o menstrual; fiebre e inflamación.</li><li><b>Paracetamol 650</b>: Dolor leve a moderado, fiebre y dolor por artritis.</li><li><b>Paracetamol pediátrico </b> (infantil): Infantil</li><li><b>Soltadol</b>: Dolor y fiebre; dolor de cabeza.</li></ul><h3 class="ns-h">Dolor de cabeza y migraña</h3><ul><li><b>Excedrin Migraña</b>: Migraña y dolor de cabeza.</li><li><b>Neo-Melubrina infantil </b> (infantil): Infantil</li><li><b>Onexmol</b>: Dolor de cabeza, muscular, dental o menstrual; fiebre e inflamación.</li><li><b>Paracetamol 650</b>: Dolor leve a moderado, fiebre y dolor por artritis.</li><li><b>Soltadol</b>: Dolor y fiebre; dolor de cabeza.</li><li><b>Tabcin efervescente</b>: Gripe: dolor de cabeza, fiebre, congestión y escurrimiento.</li></ul><h3 class="ns-h">Dolor muscular, articular e inflamación</h3><ul><li><b>Exicort </b> (receta): Receta</li><li><b>Flexiver Compuesto</b>: Dolor muscular, contracturas, espalda y torceduras.</li><li><b>Onexmol</b>: Dolor de cabeza, muscular, dental o menstrual; fiebre e inflamación.</li></ul><h3 class="ns-h">Cólicos y dolor abdominal</h3><ul><li><b>Clonixinato de lisina / Hioscina</b>: Cólico y dolor abdominal, incluido el dolor de vías urinarias o menstrual.</li><li><b>Espabion</b>: Colitis, cólico intestinal, gases e inflamación del estómago.</li><li><b>Floroglucinol</b>: Cólicos intestinales, menstruales y de vías urinarias.</li><li><b>Precicol</b>: Cólico y dolor de estómago o intestinal.</li></ul><h3 class="ns-h">Diarrea, parásitos e infección intestinal</h3><ul><li><b>Biotazol </b> (receta): Receta</li><li><b>Diosmectita (Iprikene)</b>: Diarrea aguda; se disuelve en agua.</li><li><b>Eskapar</b>: Diarrea por infección intestinal (antiséptico intestinal).</li><li><b>Hidrasec</b>: Diarrea aguda: disminuye las evacuaciones líquidas.</li><li><b>Hydrasor</b>: Suero oral para evitar la deshidratación por diarrea o vómito.</li><li><b>Sinuberase</b>: Repone la flora intestinal en diarrea o durante y después de antibióticos.</li></ul><h3 class="ns-h">Náusea, vómito y mareo</h3><ul><li><b>Dirpasid</b>: Náusea, vómito y digestión lenta o reflujo.</li><li><b>Meclison</b>: Mareo (de viaje o vértigo), náusea y vómito.</li></ul><h3 class="ns-h">Acidez, agruras e indigestión</h3><ul><li><b>Bicarbonato de sodio</b>: Acidez y agruras ocasionales.</li><li><b>Dirpasid</b>: Náusea, vómito y digestión lenta o reflujo.</li><li><b>Sal de uvas Picot</b>: Acidez, agruras y malestar estomacal.</li></ul><h3 class="ns-h">Gripe, resfriado y congestión</h3><ul><li><b>Laritol D</b>: Gripe y resfriado: congestión nasal, escurrimiento y estornudos.</li><li><b>Mometasona spray nasal </b> (receta): Receta</li><li><b>Tabcin efervescente</b>: Gripe: dolor de cabeza, fiebre, congestión y escurrimiento.</li><li><b>Ungüento 666</b>: Ayuda a descongestionar nariz, garganta irritada y bronquios.</li><li><b>Vick VapoRub</b>: Se frota en pecho y espalda: resfriado, congestión y tos.</li></ul><h3 class="ns-h">Tos y flemas</h3><ul><li><b>Drosequim infantil </b> (infantil): Infantil</li><li><b>Histiacil NF infantil </b> (infantil): Infantil</li><li><b>Ungüento 666</b>: Ayuda a descongestionar nariz, garganta irritada y bronquios.</li><li><b>Vick VapoRub</b>: Se frota en pecho y espalda: resfriado, congestión y tos.</li></ul><h3 class="ns-h">Alergias</h3><ul><li><b>Erispan Compuesto pediátrico </b> (infantil): Infantil</li><li><b>Laritol D</b>: Gripe y resfriado: congestión nasal, escurrimiento y estornudos.</li><li><b>Mometasona spray nasal </b> (receta): Receta</li><li><b>Nutracort</b>: Comezón e irritación de piel, piquetes, ronchas, dermatitis.</li></ul><h3 class="ns-h">Infecciones bacterianas (antibióticos)</h3><ul><li><b>Acarbixin </b> (receta): Receta</li><li><b>Ampicilina </b> (receta): Receta</li><li><b>Azitromicina </b> (receta): Receta</li><li><b>Bactiver </b> (receta): Receta</li><li><b>Bactrim suspensión </b> (infantil) (receta): Infantil</li><li><b>Ciprofloxacino </b> (receta): Receta</li><li><b>Dicleophen </b> (receta): Receta</li><li><b>Trimetoprima / Sulfametoxazol suspensión </b> (infantil) (receta): Infantil</li><li><b>Trimetoprima / Sulfametoxazol tabletas </b> (receta): Receta</li></ul><h3 class="ns-h">Ojos</h3><ul><li><b>Alesiram </b> (receta): Receta</li><li><b>Dexametasona / Neomicina gotas </b> (receta): Receta</li><li><b>Diclofenaco oftálmico </b> (receta): Receta</li><li><b>Hyabak</b>: Lágrima artificial: ojo seco, ardor e irritación.</li></ul><h3 class="ns-h">Oídos</h3><ul><li><b>Soldrin Ótico </b> (receta): Receta</li><li><b>Synalar-Ó </b> (receta): Receta</li></ul><h3 class="ns-h">Piel</h3><ul><li><b>Berniver </b> (receta): Receta</li><li><b>Nutracort</b>: Comezón e irritación de piel, piquetes, ronchas, dermatitis.</li></ul><h3 class="ns-h">Boca y dentición</h3><ul><li><b>Benzocaína SímiBaby </b> (infantil): Infantil</li></ul><h3 class="ns-h">Presión arterial</h3><ul><li><b>Amlodipino </b> (receta): Receta</li><li><b>Bicartial </b> (receta): Receta</li><li><b>Losartán / Hidroclorotiazida </b> (receta): Receta</li><li><b>Telmisartán </b> (receta): Receta</li></ul><h3 class="ns-h">Ánimo y ansiedad</h3><ul><li><b>Escitalopram </b> (receta): Receta</li><li><b>Fluoxetina </b> (receta): Receta</li><li><b>Zatin </b> (receta): Receta</li></ul><h3 class="ns-h">Hidratación</h3><ul><li><b>Hydrasor</b>: Suero oral para evitar la deshidratación por diarrea o vómito.</li></ul><h3 class="ns-h">Probióticos y suplementos</h3><ul><li><b>Glicinato de magnesio (Biomiral)</b>: Suplemento: relajación, descanso y calambres.</li><li><b>Multi Gomi Kids </b> (infantil): Infantil</li><li><b>Rapid-MT</b>: Suplemento para la flora intestinal.</li><li><b>Sinuberase</b>: Repone la flora intestinal en diarrea o durante y después de antibióticos.</li></ul><h3 class="ns-h">Otros</h3><ul><li><b>Minoxidil 5 %</b>: Caída de cabello (uso en cuero cabelludo).</li><li><b>Novial </b> (receta): Receta</li></ul></div></noscript>
+<main>
+  <!-- BUSCAR -->
+  <section id="view-buscar" class="wrap">
+    <div id="alerts" class="alerts"></div>
+    <div id="suggest">
+      <p class="label" style="margin-bottom:8px">Búsquedas rápidas</p>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div id="found" class="found" hidden></div>
+    <div id="results" class="list"></div>
+    <p class="disclaimer">Guía de uso general para saber qué tienes en casa; no sustituye la consulta. Revisa siempre la dosis en la caja o instructivo. Los marcados <b>Requiere receta</b> (antibióticos, presión, ánimo, gotas con antibiótico) úsalos solo con indicación médica.</p>
+  </section>
+
+  <!-- POR PADECIMIENTO -->
+  <section id="view-cats" class="wrap" hidden>
+    <div class="row2"><p class="label">Clasificadas por lo que tratan</p>
+      <div class="toolbar"><button class="btn" id="openAll" type="button">Abrir todo</button></div></div>
+    <div id="cats" class="list"></div>
+  </section>
+
+  <!-- INVENTARIO -->
+  <section id="view-inv" class="wrap" hidden>
+    <div class="toolbar">
+      <button class="btn primary" id="addBtn" type="button">+ Agregar medicina</button>
+      <select class="filter" id="invFilter" aria-label="Filtrar inventario">
+        <option value="all">Todas</option>
+        <option value="kid">Solo infantiles</option>
+        <option value="rx">Requieren receta</option>
+        <option value="exp">Caducadas o por caducar</option>
+        <option value="out">Agotadas</option>
+        <option value="nocad">Sin fecha de caducidad</option>
+      </select>
+    </div>
+    <div id="inv" class="list"></div>
+    <div class="toolbar">
+      <button class="btn" id="exportBtn" type="button">Respaldar datos</button>
+      <button class="btn" id="importBtn" type="button">Restaurar respaldo</button>
+      <button class="btn danger" id="resetBtn" type="button">Volver a lista original</button>
+    </div>
+    <div id="resetConfirm" class="confirm" hidden>¿Borrar tus cambios y volver a la lista original?
+      <button class="btn danger" id="resetYes" type="button">Sí, restablecer</button><button class="btn" id="resetNo" type="button">Cancelar</button></div>
+    <p class="disclaimer">Los cambios se guardan en este teléfono o computadora. Usa “Respaldar datos” para pasarlos a otro dispositivo.</p>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap" role="tablist">
+    <button role="tab" data-view="buscar" aria-selected="true" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>Buscar</button>
+    <button role="tab" data-view="cats" aria-selected="false" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Por padecimiento</button>
+    <button role="tab" data-view="inv" aria-selected="false" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></svg>Inventario</button>
+  </div>
+</nav>
+
+<div id="sheet" class="sheet" hidden><div class="panel" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" id="panel"></div></div>
+<div id="toast" class="toast" hidden></div>
+<input type="file" id="fileIn" accept=".json,application/json" hidden>
+
+<script>
+(function(){
+"use strict";
+var STORE="botiquin_casa_v1";
+
+/* ---------- Categorías (por qué cura) ---------- */
+var CATS=[
+ ["fiebre","Dolor y fiebre","Analgésicos y antipiréticos de uso común."],
+ ["cabeza","Dolor de cabeza y migraña",""],
+ ["musculo","Dolor muscular, articular e inflamación","Golpes, torceduras, espalda, rodillas, artritis."],
+ ["colico","Cólicos y dolor abdominal","Cólico intestinal, menstrual o de vías urinarias, gases, colitis."],
+ ["diarrea","Diarrea, parásitos e infección intestinal",""],
+ ["nausea","Náusea, vómito y mareo",""],
+ ["acidez","Acidez, agruras e indigestión",""],
+ ["gripe","Gripe, resfriado y congestión",""],
+ ["tos","Tos y flemas",""],
+ ["alergia","Alergias","Estornudos, rinitis, ronchas, urticaria."],
+ ["antibiotico","Infecciones bacterianas (antibióticos)","Solo con receta: el médico decide cuál y por cuántos días."],
+ ["ojos","Ojos",""],
+ ["oidos","Oídos",""],
+ ["piel","Piel",""],
+ ["boca","Boca y dentición",""],
+ ["presion","Presión arterial","Tratamiento de uso diario con receta."],
+ ["animo","Ánimo y ansiedad","Tratamiento con receta."],
+ ["hidratacion","Hidratación",""],
+ ["suplementos","Probióticos y suplementos",""],
+ ["otros","Otros","Anticonceptivo, cabello."]
+];
+var CATNAME={};CATS.forEach(function(c){CATNAME[c[0]]=c[1]});
+
+/* ---------- Síntomas reconocidos en el buscador ---------- */
+var SYM={
+ fiebre:["Fiebre",["fiebre","calentura","temperatura alta","febril"]],
+ dolor_cabeza:["Dolor de cabeza",["dolor de cabeza","duele la cabeza","cabeza","cefalea","jaqueca"]],
+ migrana:["Migraña",["migrana","migraña"]],
+ dolor_general:["Dolor en general",["dolor","duele","malestar general","cuerpo cortado"]],
+ dolor_muscular:["Dolor muscular",["dolor muscular","musculo","muscular","contractura","espalda","lumbago","cintura","torcedura","esguince","golpe","cuello","calambre"]],
+ dolor_articular:["Dolor de articulaciones",["articulacion","rodilla","artritis","gota","inflamacion","hinchazon","tobillo","hombro"]],
+ dolor_dental:["Dolor de muela",["muela","dental","dientes","diente"]],
+ colico:["Cólico / dolor de estómago",["colico","dolor de estomago","dolor de panza","panza","barriga","retorcijon","estomago","abdominal","colico renal","dolor al orinar","piedras en el rinon"]],
+ colico_menstrual:["Cólico menstrual",["colico menstrual","menstrual","regla","periodo","menstruacion"]],
+ gases:["Gases / colitis",["gases","inflamado","inflamacion de estomago","colitis","colon"]],
+ diarrea:["Diarrea",["diarrea","chorro","chorrillo","evacuaciones","suelto del estomago","deposiciones"]],
+ parasitos:["Parásitos / amibas",["parasito","amiba","amibiasis","giardia"]],
+ infeccion_intestinal:["Infección intestinal",["infeccion intestinal","infeccion estomacal","infeccion del estomago","gastroenteritis","intoxicacion"]],
+ nausea:["Náusea",["nausea","ganas de vomitar","asco","revuelto"]],
+ vomito:["Vómito",["vomito","vomitar","volvio el estomago"]],
+ mareo:["Mareo",["mareo","vertigo","mareo de viaje","carro","barco"]],
+ acidez:["Acidez / agruras",["acidez","agruras","reflujo","ardor de estomago","indigestion","llenura","pesadez"]],
+ gripe:["Gripe / resfriado",["gripe","gripa","resfriado","resfrio","catarro"]],
+ congestion:["Congestión nasal",["congestion","nariz tapada","mocos","escurrimiento","estornudo","nariz","sinusitis"]],
+ tos:["Tos",["tos"]],
+ flemas:["Flemas",["flema","pecho cargado","bronquios"]],
+ garganta:["Dolor de garganta",["garganta","anginas","amigdalas","faringitis"]],
+ alergia:["Alergia",["alergia","alergico","ronchas","urticaria","rinitis"]],
+ infeccion_urinaria:["Infección urinaria",["infeccion urinaria","infeccion de orina","orina","ardor al orinar","mal de orin","cistitis","vias urinarias"]],
+ infeccion_respiratoria:["Infección respiratoria",["infeccion respiratoria","bronquitis","infeccion de garganta","neumonia","sinusitis"]],
+ infeccion_oido:["Oído",["oido","dolor de oido","otitis","oidos"]],
+ infeccion_piel:["Infección de piel",["herida infectada","impetigo","absceso","grano infectado","pus","infeccion de piel","herida"]],
+ piel_comezon:["Comezón / irritación de piel",["comezon","picazon","piquete","dermatitis","irritacion","sarpullido","rozadura","piel"]],
+ ojo_rojo:["Ojo rojo / conjuntivitis",["ojo rojo","conjuntivitis","lagana","infeccion de ojo","ojo","ojos"]],
+ ojo_inflamacion:["Inflamación de ojo",["inflamacion de ojo","dolor de ojo","ojo hinchado"]],
+ ojo_seco:["Ojo seco",["ojo seco","ojos secos","resequedad","ardor de ojos","ojos cansados"]],
+ denticion:["Dentición",["denticion","encias","le salen los dientes","bebe"]],
+ presion:["Presión alta",["presion","hipertension","presion alta"]],
+ animo:["Ánimo / ansiedad",["depresion","ansiedad","animo"]],
+ deshidratacion:["Deshidratación",["deshidratacion","suero","electrolitos","hidratar"]],
+ flora:["Flora intestinal",["flora","probiotico","despues del antibiotico"]],
+ sueno:["Sueño / estrés",["sueno","dormir","insomnio","estres","relajar"]],
+ anticonceptivo:["Anticonceptivo",["anticonceptivo","pastilla anticonceptiva"]],
+ cabello:["Caída de cabello",["cabello","pelo","calvicie","caida"]]
+};
+
+var QUICK=["Dolor de cabeza","Fiebre","Tos","Gripe","Diarrea","Dolor de estómago","Vómito","Mareo","Acidez","Alergia","Infección urinaria","Dolor muscular","Oído","Ojo rojo","Comezón","Dentición"];
+
+/* ---------- Inventario inicial (identificado de tus fotos, 26-oct-2026) ---------- */
+function M(n,a,p,u,c,s,pub,rx,q,unit,cad,nota){return {n:n,a:a,p:p,u:u,c:c,s:s,pub:pub,rx:!!rx,q:q,unit:unit||"envase",cad:cad||"",nota:nota||"",kw:""};}
+var SEED=[
+M("Hidrasec","Racecadotrilo","Cápsulas 100 mg · caja con 9","Diarrea aguda: disminuye las evacuaciones líquidas.",["diarrea"],["diarrea"],"adulto",0,1,"caja","","Escrito en la caja: Antidiarreico"),
+M("Azitromicina","Azitromicina","Tabletas 500 mg · caja con 3","Antibiótico para infecciones de garganta, bronquios, oído y piel.",["antibiotico"],["garganta","infeccion_respiratoria","infeccion_oido","infeccion_piel"],"adulto",1,1,"caja"),
+M("Dirpasid","Metoclopramida","Tabletas 10 mg · caja con 20","Náusea, vómito y digestión lenta o reflujo.",["nausea","acidez"],["nausea","vomito","acidez"],"adulto",0,1,"caja","","No darla a niños sin indicación médica."),
+M("Ampicilina","Ampicilina","Tabletas 500 mg · caja con 20","Antibiótico para infecciones respiratorias, urinarias y de oído.",["antibiotico"],["garganta","infeccion_respiratoria","infeccion_urinaria","infeccion_oido"],"adulto",1,1,"caja"),
+M("Berniver","Mupirocina 2 %","Ungüento · tubo 15 g","Infecciones de la piel: heridas o granitos infectados, impétigo.",["piel"],["infeccion_piel"],"todos",1,1,"tubo"),
+M("Laritol D","Loratadina / Fenilefrina","Solución adulto","Gripe y resfriado: congestión nasal, escurrimiento y estornudos.",["gripe","alergia"],["gripe","congestion","alergia"],"adulto",0,1,"frasco"),
+M("Acarbixin","Amoxicilina / Ácido clavulánico","Tabletas 500/125 mg","Antibiótico para garganta, oído, sinusitis, vías urinarias, piel e infecciones dentales.",["antibiotico"],["garganta","infeccion_respiratoria","infeccion_oido","infeccion_urinaria","infeccion_piel","dolor_dental"],"adulto",1,1,"frasco"),
+M("Bactrim suspensión","Sulfametoxazol / Trimetoprima","Suspensión 200/40 mg por 5 mL · 100 mL","Antibiótico infantil: infección urinaria, de oído, respiratoria o intestinal.",["antibiotico"],["infeccion_urinaria","infeccion_oido","infeccion_respiratoria","infeccion_intestinal"],"infantil",1,1,"frasco","2027-06"),
+M("Neo-Melubrina infantil","Metamizol sódico","Jarabe 250 mg/5 mL · 100 mL","Fiebre y dolor en niños.",["fiebre","cabeza"],["fiebre","dolor_cabeza","dolor_general"],"infantil",0,1,"frasco"),
+M("Histiacil NF infantil","Dextrometorfano / Ambroxol","Jarabe · 150 mL","Tos y para aflojar y expulsar flemas en niños.",["tos"],["tos","flemas"],"infantil",0,1,"frasco"),
+M("Biotazol","Metronidazol","Suspensión 250 mg/5 mL · 120 mL","Amibas, giardia y otras infecciones intestinales por parásitos.",["diarrea"],["parasitos","diarrea","infeccion_intestinal"],"todos",1,1,"frasco"),
+M("Ciprofloxacino","Ciprofloxacino","Tabletas 500 mg","Antibiótico para infección urinaria e infección intestinal.",["antibiotico"],["infeccion_urinaria","infeccion_intestinal","diarrea"],"adulto",1,1,"caja","","Escrito en la caja: Inf. urinaria"),
+M("Trimetoprima / Sulfametoxazol tabletas","Trimetoprima / Sulfametoxazol","Tabletas 160/800 mg · frasco con 14","Antibiótico para infección urinaria, respiratoria, de oído o intestinal.",["antibiotico"],["infeccion_urinaria","infeccion_respiratoria","infeccion_oido","infeccion_intestinal"],"adulto",1,1,"frasco"),
+M("Trimetoprima / Sulfametoxazol suspensión","Trimetoprima / Sulfametoxazol","Suspensión 800/4000 mg por 100 mL · 120 mL","Antibiótico (versión líquida, se usa en niños): infección urinaria, de oído, respiratoria o intestinal.",["antibiotico"],["infeccion_urinaria","infeccion_respiratoria","infeccion_oido","infeccion_intestinal"],"infantil",1,1,"frasco"),
+M("Bactiver","Sulfametoxazol / Trimetoprima","Tabletas 400/80 mg · caja con 20","Antibiótico para infección urinaria, respiratoria, de oído o intestinal.",["antibiotico"],["infeccion_urinaria","infeccion_respiratoria","infeccion_oido","infeccion_intestinal"],"adulto",1,1,"caja"),
+M("Excedrin Migraña","Ácido acetilsalicílico / Paracetamol / Cafeína","Tabletas 250/250/65 mg · frasco con 24","Migraña y dolor de cabeza.",["cabeza","fiebre"],["migrana","dolor_cabeza","dolor_general"],"adulto",0,1,"frasco"),
+M("Espabion","Trimebutina","Suspensión 2 g/100 mL · 100 mL","Colitis, cólico intestinal, gases e inflamación del estómago.",["colico"],["colico","gases"],"todos",0,1,"frasco"),
+M("Floroglucinol","Floroglucinol / Trimetilfloroglucinol","Cápsulas 80/80 mg","Cólicos intestinales, menstruales y de vías urinarias.",["colico"],["colico","colico_menstrual"],"adulto",0,1,"caja"),
+M("Eskapar","Nifuroxazida","Cápsulas 400 mg · caja con 16","Diarrea por infección intestinal (antiséptico intestinal).",["diarrea"],["diarrea","infeccion_intestinal"],"adulto",0,1,"caja","","Escrito en la caja: 1 en la mañana y 1 en la noche"),
+M("Meclison","Meclizina / Piridoxina","Tabletas 25/50 mg · caja con 10","Mareo (de viaje o vértigo), náusea y vómito.",["nausea"],["mareo","nausea","vomito"],"adulto",0,1,"caja"),
+M("Diosmectita (Iprikene)","Diosmectita","Polvo 3 g · caja con 10 sobres","Diarrea aguda; se disuelve en agua.",["diarrea"],["diarrea"],"todos",0,1,"caja"),
+M("Precicol","Hioscina / Paracetamol","Tabletas 10/500 mg · caja con 20","Cólico y dolor de estómago o intestinal.",["colico"],["colico","colico_menstrual","dolor_general"],"adulto",0,1,"caja"),
+M("Clonixinato de lisina / Hioscina","Clonixinato de lisina / Hioscina","Tabletas 250/10 mg","Cólico y dolor abdominal, incluido el dolor de vías urinarias o menstrual.",["colico"],["colico","colico_menstrual","infeccion_urinaria"],"adulto",0,1,"caja","","Escrito en la caja: Infección orina. Calma el dolor; la infección se trata con antibiótico."),
+M("Drosequim infantil","Dropropizina / Bromhexina","Jarabe 150/80 mg por 100 mL · 200 mL","Tos con flemas en niños.",["tos"],["tos","flemas"],"infantil",0,1,"frasco"),
+M("Bicarbonato de sodio","Bicarbonato de sodio","Polvo · 200 g","Acidez y agruras ocasionales.",["acidez"],["acidez"],"adulto",0,1,"caja"),
+M("Sal de uvas Picot","Bicarbonato / Ácido tartárico / Ácido cítrico","Sobre efervescente 5 g","Acidez, agruras y malestar estomacal.",["acidez"],["acidez"],"adulto",0,1,"sobre"),
+M("Soltadol","Paracetamol","Tabletas 750 mg · caja con 20","Dolor y fiebre; dolor de cabeza.",["fiebre","cabeza"],["fiebre","dolor_cabeza","dolor_general","dolor_dental"],"adulto",0,1,"caja"),
+M("Paracetamol 650","Paracetamol","Tabletas 650 mg · caja con 24","Dolor leve a moderado, fiebre y dolor por artritis.",["fiebre","cabeza"],["fiebre","dolor_cabeza","dolor_general","dolor_articular","dolor_dental"],"adulto",0,1,"caja"),
+M("Onexmol","Naproxeno sódico / Paracetamol","Tabletas 275/300 mg · frasco con 10","Dolor de cabeza, muscular, dental o menstrual; fiebre e inflamación.",["fiebre","cabeza","musculo"],["dolor_cabeza","dolor_general","dolor_muscular","dolor_articular","dolor_dental","colico_menstrual","fiebre"],"adulto",0,1,"frasco"),
+M("Dafloxen F","Naproxeno sódico / Paracetamol","Suspensión 125/100 mg por 5 mL","Dolor y fiebre en niños.",["fiebre"],["fiebre","dolor_general","dolor_cabeza","dolor_dental"],"infantil",0,1,"frasco"),
+M("Paracetamol pediátrico","Paracetamol","Jarabe 3.2 g/100 mL · 120 mL","Baja la fiebre y alivia el dolor en niños.",["fiebre"],["fiebre","dolor_general","dolor_cabeza"],"infantil",0,1,"frasco"),
+M("Tabcin efervescente","Ácido acetilsalicílico / Fenilefrina / Clorfenamina","Tabletas efervescentes 500/8/2 mg","Gripe: dolor de cabeza, fiebre, congestión y escurrimiento.",["gripe","cabeza"],["gripe","congestion","fiebre","dolor_cabeza"],"adulto",0,2,"sobres"),
+M("Flexiver Compuesto","Meloxicam / Metocarbamol","Cápsulas 7.5/215 mg · caja con 20","Dolor muscular, contracturas, espalda y torceduras.",["musculo"],["dolor_muscular","dolor_articular"],"adulto",0,1,"caja"),
+M("Exicort","Etoricoxib","Comprimidos 90 mg · caja con 28","Dolor e inflamación de articulaciones (artritis, gota), muscular y dental.",["musculo"],["dolor_articular","dolor_muscular","dolor_dental"],"adulto",1,1,"caja"),
+M("Dicleophen","Dicloxacilina","Cápsulas 500 mg · caja con 12","Antibiótico para infecciones de piel (abscesos, heridas infectadas) y garganta.",["antibiotico"],["infeccion_piel","garganta"],"adulto",1,1,"caja"),
+M("Erispan Compuesto pediátrico","Loratadina / Betametasona","Solución 100 mg/5 mg por 100 mL · 60 mL","Alergias fuertes en niños: ronchas, urticaria, rinitis.",["alergia"],["alergia"],"infantil",0,1,"frasco","","Contiene cortisona: solo por pocos días."),
+M("Mometasona spray nasal","Mometasona 0.05 %","Suspensión para inhalación nasal · 18 mL (140 dosis)","Rinitis alérgica y congestión nasal que no se quita.",["alergia","gripe"],["congestion","alergia"],"adulto",1,1,"frasco"),
+M("Vick VapoRub","Alcanfor / Mentol / Aceite de eucalipto","Ungüento · lata 12 g","Se frota en pecho y espalda: resfriado, congestión y tos.",["gripe","tos"],["gripe","congestion","tos"],"todos",0,1,"lata","","No usar en menores de 2 años."),
+M("Ungüento 666","Ungüento descongestionante","Tarro 35 g","Ayuda a descongestionar nariz, garganta irritada y bronquios.",["gripe","tos"],["congestion","gripe","garganta","tos","flemas"],"todos",0,1,"tarro"),
+M("Dexametasona / Neomicina gotas","Dexametasona / Neomicina","Solución gotero 1/3.5 mg por mL · 10 mL","Gotas para ojos: conjuntivitis e inflamación con infección.",["ojos"],["ojo_rojo","ojo_inflamacion"],"todos",1,1,"gotero"),
+M("Alesiram","Tobramicina / Dexametasona","Ungüento oftálmico 3/1 mg por g","Infección e inflamación de ojos.",["ojos"],["ojo_rojo","ojo_inflamacion"],"todos",1,1,"tubo"),
+M("Diclofenaco oftálmico","Diclofenaco","Solución oftálmica 1 mg/mL · gotero 5 mL","Dolor e inflamación de ojos.",["ojos"],["ojo_inflamacion"],"adulto",1,1,"gotero"),
+M("Hyabak","Hialuronato de sodio 0.15 %","Solución oftálmica · 10 mL","Lágrima artificial: ojo seco, ardor e irritación.",["ojos"],["ojo_seco"],"todos",0,1,"frasco"),
+M("Soldrin Ótico","Cloranfenicol / Benzocaína / corticoide","Solución ótica · gotero","Gotas para oído: dolor e infección de oído.",["oidos"],["infeccion_oido"],"todos",1,1,"gotero"),
+M("Synalar-Ó","Solución ótica","Gotero 10 mL","Gotas para oído: infección, inflamación y comezón del oído.",["oidos"],["infeccion_oido"],"todos",1,1,"gotero"),
+M("Nutracort","Hidrocortisona 1 %","Crema · tubo 60 g","Comezón e irritación de piel, piquetes, ronchas, dermatitis.",["piel","alergia"],["piel_comezon","alergia"],"todos",0,1,"tubo"),
+M("Benzocaína SímiBaby","Benzocaína","Gel para encías · tubo 10 g","Dolor de encías cuando le están saliendo los dientes al bebé.",["boca"],["denticion"],"infantil",0,1,"tubo"),
+M("Hydrasor","Electrolitos orales","Polvo sabor limón · sobre 28.4 g","Suero oral para evitar la deshidratación por diarrea o vómito.",["hidratacion","diarrea"],["deshidratacion","diarrea","vomito"],"todos",0,1,"sobre"),
+M("Sinuberase","Esporas de Bacillus clausii","Ampolletas bebibles","Repone la flora intestinal en diarrea o durante y después de antibióticos.",["suplementos","diarrea"],["flora","diarrea"],"todos",0,5,"ampolletas","2027-09"),
+M("Rapid-MT","Probióticos / Prebióticos / Cúrcuma","Cápsulas · 30","Suplemento para la flora intestinal.",["suplementos"],["flora"],"adulto",0,1,"caja"),
+M("Multi Gomi Kids","Probióticos / Prebióticos","Gomitas · 60","Suplemento de probióticos para niños.",["suplementos"],["flora"],"infantil",0,1,"frasco"),
+M("Glicinato de magnesio (Biomiral)","Magnesio / L-teanina / Zinc / B6 / D3","Cápsulas · 30","Suplemento: relajación, descanso y calambres.",["suplementos"],["sueno","dolor_muscular"],"adulto",0,1,"frasco"),
+M("Amlodipino","Amlodipino","Tabletas 5 mg · frasco con 100","Presión arterial alta.",["presion"],["presion"],"adulto",1,1,"frasco"),
+M("Losartán / Hidroclorotiazida","Losartán / Hidroclorotiazida","Tabletas 100/25 mg","Presión arterial alta.",["presion"],["presion"],"adulto",1,1,"caja"),
+M("Telmisartán","Telmisartán","Tabletas 40 mg · caja con 28","Presión arterial alta.",["presion"],["presion"],"adulto",1,1,"caja"),
+M("Bicartial","Amlodipino / Losartán","Cápsulas 5/100 mg","Presión arterial alta.",["presion"],["presion"],"adulto",1,1,"caja"),
+M("Escitalopram","Escitalopram","Tabletas 10 mg · caja con 28","Depresión y ansiedad.",["animo"],["animo"],"adulto",1,1,"caja"),
+M("Fluoxetina","Fluoxetina","Cápsulas 20 mg · frasco con 28","Depresión y ansiedad.",["animo"],["animo"],"adulto",1,1,"frasco"),
+M("Zatin","Fluoxetina","Cápsulas 20 mg · blíster","Depresión y ansiedad.",["animo"],["animo"],"adulto",1,1,"blíster"),
+M("Novial","Desogestrel / Etinilestradiol","Tabletas","Anticonceptivo oral.",["otros"],["anticonceptivo"],"adulto",1,1,"caja"),
+M("Minoxidil 5 %","Minoxidil","Solución spray · 60 mL","Caída de cabello (uso en cuero cabelludo).",["otros"],["cabello"],"adulto",0,1,"frasco")
+];
+
+/* ---------- Estado ---------- */
+var meds;
+function uid(){return "m"+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function seed(){return SEED.map(function(m){var o=JSON.parse(JSON.stringify(m));o.id=uid();return o})}
+function load(){
+  try{var raw=localStorage.getItem(STORE);if(raw){var d=JSON.parse(raw);if(Array.isArray(d)&&d.length)return d}}catch(e){}
+  return seed();
+}
+function save(){try{localStorage.setItem(STORE,JSON.stringify(meds))}catch(e){toast("No se pudo guardar en este navegador")}}
+meds=load();
+
+/* ---------- Utilidades ---------- */
+function norm(s){return (s||"").toString().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/\s+/g," ").trim()}
+function esc(s){return (s||"").toString().replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+var MESES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+function fmtCad(c){if(!c)return "";var p=c.split("-");return MESES[(+p[1])-1]+" "+p[0]}
+function expState(m){
+  if(!m.cad)return "";
+  var p=m.cad.split("-"),end=new Date(+p[0],+p[1],0,23,59),now=new Date();
+  if(end<now)return "exp";
+  var soon=new Date(now.getFullYear(),now.getMonth()+3,now.getDate());
+  return end<=soon?"soon":"";
+}
+function qtyText(m){return m.q+" "+m.unit}
+function toast(t){var el=document.getElementById("toast");el.textContent=t;el.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(function(){el.hidden=true},2200)}
+
+/* ---------- Búsqueda ---------- */
+var ALIAS=[];Object.keys(SYM).forEach(function(k){SYM[k][1].forEach(function(a){ALIAS.push([k,norm(a)])})});
+function detect(q){
+  var hits=[];
+  ALIAS.forEach(function(p){
+    var a=p[1];
+    if((" "+q+" ").indexOf(" "+a)>-1 || (q.length>=4 && a.indexOf(q)===0)) hits.push(p);
+  });
+  // descarta coincidencias genéricas contenidas en otras más específicas ("dolor" dentro de "dolor de cabeza")
+  hits=hits.filter(function(h){return !hits.some(function(o){return o!==h&&o[1].length>h[1].length&&o[1].indexOf(h[1])>-1&&o[0]!==h[0]})});
+  var tags={};hits.forEach(function(h){tags[h[0]]=1});
+  // "dolor de cabeza" incluye migraña y viceversa
+  if(tags.dolor_cabeza)tags.migrana=1; if(tags.migrana)tags.dolor_cabeza=1;
+  if(tags.dolor_general&&Object.keys(tags).length>1)delete tags.dolor_general;
+  return Object.keys(tags);
+}
+function hay(m){return norm([m.n,m.a,m.u,m.kw,m.nota].join(" "))}
+function search(raw){
+  var q=norm(raw);if(!q)return null;
+  var tags=detect(q);
+  var res=[];
+  meds.forEach(function(m){
+    var sc=0;
+    var hit=0;tags.forEach(function(t){if(m.s.indexOf(t)>-1)hit++});
+    if(hit)sc+=hit*10+10/m.s.length; /* las medicinas más específicas para el síntoma van primero */
+    var h=" "+hay(m).replace(/[^a-z0-9]+/g," ")+" ";
+    if(h.indexOf(" "+q)>-1)sc+=6;
+    else{var w=q.split(" ").filter(function(x){return x.length>3});if(w.length&&w.every(function(x){return h.indexOf(" "+x)>-1}))sc+=3}
+    if(sc)res.push([sc,m]);
+  });
+  res.sort(function(a,b){
+    var av=avail(a[1]),bv=avail(b[1]);
+    if(av!==bv)return bv-av;
+    return b[0]-a[0]||a[1].n.localeCompare(b[1].n,"es");
+  });
+  return {tags:tags,items:res.map(function(r){return r[1]})};
+}
+function avail(m){return (m.q>0&&expState(m)!=="exp")?1:0}
+
+/* ---------- Render ---------- */
+function badges(m){
+  var b=[];
+  if(m.pub==="infantil")b.push('<span class="b kid">Infantil</span>');
+  else if(m.pub==="adulto")b.push('<span class="b adult">Adulto</span>');
+  if(m.rx)b.push('<span class="b rx">Requiere receta</span>');
+  var e=expState(m);
+  if(e==="exp")b.push('<span class="b exp">Caducado '+esc(fmtCad(m.cad))+'</span>');
+  else if(e==="soon")b.push('<span class="b soon">Caduca '+esc(fmtCad(m.cad))+'</span>');
+  else if(m.cad)b.push('<span class="b adult">Cad. '+esc(fmtCad(m.cad))+'</span>');
+  if(m.q<=0)b.push('<span class="b empty">Agotado</span>');
+  return '<div class="badges">'+b.join("")+'</div>';
+}
+function card(m){
+  return '<article class="card'+(avail(m)?"":" out")+'" data-id="'+m.id+'">'+
+   '<div class="row1"><div><h3>'+esc(m.n)+'</h3><div class="act">'+esc(m.a)+'</div></div></div>'+
+   '<div class="use">'+esc(m.u)+'</div>'+
+   (m.p?'<div class="pres">'+esc(m.p)+'</div>':'')+
+   (m.nota?'<div class="note">'+esc(m.nota)+'</div>':'')+
+   badges(m)+
+   '<div class="row2"><div class="qty"><button type="button" data-act="dec" aria-label="Quitar uno">−</button><span>'+esc(qtyText(m))+'</span><button type="button" data-act="inc" aria-label="Agregar uno">+</button></div>'+
+   '<button class="edit" type="button" data-act="edit">Editar</button></div></article>';
+}
+function renderAlerts(){
+  var exp=meds.filter(function(m){return expState(m)==="exp"}).length,
+      soon=meds.filter(function(m){return expState(m)==="soon"}).length,
+      out=meds.filter(function(m){return m.q<=0}).length,
+      nocad=meds.filter(function(m){return !m.cad}).length,h="";
+  if(exp)h+='<button class="alert bad" data-go="exp" type="button">'+exp+' caducado'+(exp>1?"s":"")+'</button>';
+  if(soon)h+='<button class="alert warn" data-go="exp" type="button">'+soon+' por caducar (3 meses)</button>';
+  if(out)h+='<button class="alert warn" data-go="out" type="button">'+out+' agotado'+(out>1?"s":"")+'</button>';
+  if(nocad)h+='<button class="alert warn" data-go="nocad" type="button">'+nocad+' sin fecha de caducidad</button>';
+  document.getElementById("alerts").innerHTML=h;
+  document.getElementById("subtitle").textContent=meds.length+" medicinas · "+meds.filter(avail).length+" disponibles";
+}
+function renderSearch(){
+  var v=document.getElementById("q").value,r=search(v);
+  document.getElementById("clear").hidden=!v;
+  var found=document.getElementById("found"),out=document.getElementById("results"),sug=document.getElementById("suggest");
+  if(!r){found.hidden=true;out.innerHTML="";sug.hidden=false;return}
+  sug.hidden=true;
+  if(r.tags.length){found.hidden=false;found.innerHTML="Buscando para: <b>"+r.tags.map(function(t){return esc(SYM[t][0])}).join(", ")+"</b> · "+r.items.length+" resultado"+(r.items.length===1?"":"s")}
+  else found.hidden=true;
+  out.innerHTML=r.items.length?r.items.map(card).join(""):'<div class="empty-state">No encontré medicinas para “'+esc(v)+'”.<br>Prueba con otra palabra: fiebre, tos, cólico, oído…</div>';
+}
+function renderCats(){
+  var h="";
+  CATS.forEach(function(c){
+    var list=meds.filter(function(m){return m.c.indexOf(c[0])>-1}).sort(function(a,b){return avail(b)-avail(a)||a.n.localeCompare(b.n,"es")});
+    if(!list.length)return;
+    var av=list.filter(avail).length;
+    h+='<details class="cat"><summary><span>'+esc(c[1])+'</span><span class="n">'+av+'/'+list.length+'</span></summary><div class="catbody">'+
+      (c[2]?'<div class="catdesc">'+esc(c[2])+'</div>':'')+
+      list.map(function(m){
+        var e=expState(m),st=m.q<=0?"Agotado":e==="exp"?"Caducado":qtyText(m);
+        var tag=(m.pub==="infantil"?' <span class="b kid">Infantil</span>':'')+(m.rx?' <span class="b rx">Receta</span>':'');
+        return '<div class="mini" data-id="'+m.id+'"><div class="l"><b>'+esc(m.n)+tag+'</b><span>'+esc(m.u)+'</span></div><div class="r">'+esc(st)+'</div></div>';
+      }).join("")+'</div></details>';
+  });
+  var open=document.querySelectorAll("#cats details[open] summary span:first-child"),keep={};
+  Array.prototype.forEach.call(open,function(s){keep[s.textContent]=1});
+  var box=document.getElementById("cats");box.innerHTML=h;
+  Array.prototype.forEach.call(box.querySelectorAll("details"),function(d){if(keep[d.querySelector("summary span").textContent])d.open=true});
+}
+function renderInv(){
+  var f=document.getElementById("invFilter").value;
+  var list=meds.filter(function(m){
+    if(f==="kid")return m.pub==="infantil";
+    if(f==="rx")return m.rx;
+    if(f==="exp")return !!expState(m);
+    if(f==="out")return m.q<=0;
+    if(f==="nocad")return !m.cad;
+    return true;
+  }).sort(function(a,b){return a.n.localeCompare(b.n,"es")});
+  document.getElementById("inv").innerHTML=list.length?list.map(card).join(""):'<div class="empty-state">No hay medicinas con este filtro.</div>';
+}
+function renderAll(){renderAlerts();renderSearch();renderCats();renderInv()}
+
+/* ---------- Pestañas ---------- */
+function show(v){
+  ["buscar","cats","inv"].forEach(function(x){document.getElementById("view-"+x).hidden=(x!==v)});
+  Array.prototype.forEach.call(document.querySelectorAll("nav.tabs button"),function(b){b.setAttribute("aria-selected",b.dataset.view===v?"true":"false")});
+  window.scrollTo(0,0);
+}
+document.querySelector("nav.tabs").addEventListener("click",function(e){var b=e.target.closest("button[data-view]");if(b)show(b.dataset.view)});
+
+/* ---------- Eventos ---------- */
+var qIn=document.getElementById("q");
+qIn.addEventListener("input",function(){show("buscar");renderSearch()});
+document.getElementById("clear").addEventListener("click",function(){qIn.value="";renderSearch();qIn.focus()});
+document.getElementById("chips").innerHTML=QUICK.map(function(t){return '<button class="chip" type="button">'+esc(t)+'</button>'}).join("");
+document.getElementById("chips").addEventListener("click",function(e){var b=e.target.closest(".chip");if(b){qIn.value=b.textContent;renderSearch()}});
+document.getElementById("alerts").addEventListener("click",function(e){var b=e.target.closest("[data-go]");if(b){document.getElementById("invFilter").value=b.dataset.go;renderInv();show("inv")}});
+document.getElementById("invFilter").addEventListener("change",renderInv);
+document.getElementById("openAll").addEventListener("click",function(){var ds=document.querySelectorAll("#cats details"),any=Array.prototype.some.call(ds,function(d){return !d.open});Array.prototype.forEach.call(ds,function(d){d.open=any});this.textContent=any?"Cerrar todo":"Abrir todo"});
+function byId(id){for(var i=0;i<meds.length;i++)if(meds[i].id===id)return meds[i]}
+document.querySelector("main").addEventListener("click",function(e){
+  var b=e.target.closest("[data-act]"),host=e.target.closest("[data-id]");
+  if(!host)return;var m=byId(host.dataset.id);if(!m)return;
+  if(!b){if(host.classList.contains("mini"))openEdit(m);return}
+  if(b.dataset.act==="inc"){m.q=Math.round((m.q+1)*100)/100;save();renderAll()}
+  else if(b.dataset.act==="dec"){m.q=Math.max(0,Math.round((m.q-1)*100)/100);save();renderAll()}
+  else if(b.dataset.act==="edit")openEdit(m);
+});
+
+/* ---------- Editar / agregar ---------- */
+var sheet=document.getElementById("sheet"),panel=document.getElementById("panel");
+function closeSheet(){sheet.hidden=true;panel.innerHTML="";document.body.style.overflow=""}
+sheet.addEventListener("click",function(e){if(e.target===sheet)closeSheet()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!sheet.hidden)closeSheet()});
+function openEdit(m){
+  var isNew=!m;
+  m=m||{id:"",n:"",a:"",p:"",u:"",c:[],s:[],pub:"todos",rx:false,q:1,unit:"envase",cad:"",nota:"",kw:""};
+  panel.innerHTML='<h2 id="sheetTitle">'+(isNew?"Agregar medicina":"Editar medicina")+'</h2>'+
+   '<form id="ef" novalidate>'+
+   '<div style="display:flex;flex-direction:column;gap:10px">'+
+   '<div class="f"><label for="e_n">Nombre</label><input id="e_n" required value="'+esc(m.n)+'"></div>'+
+   '<div class="f"><label for="e_a">Sustancia activa</label><input id="e_a" value="'+esc(m.a)+'"></div>'+
+   '<div class="f"><label for="e_p">Presentación</label><input id="e_p" placeholder="Ej. Tabletas 500 mg · caja con 20" value="'+esc(m.p)+'"></div>'+
+   '<div class="f"><label for="e_u">Para qué sirve</label><textarea id="e_u">'+esc(m.u)+'</textarea></div>'+
+   '<div class="f"><label>Clasificación (por qué cura)</label><div class="checks">'+CATS.map(function(c){return '<label><input type="checkbox" name="cat" value="'+c[0]+'"'+(m.c.indexOf(c[0])>-1?" checked":"")+'>'+esc(c[1])+'</label>'}).join("")+'</div></div>'+
+   '<div class="f"><label for="e_kw">Síntomas o palabras para encontrarla</label><input id="e_kw" placeholder="Ej. dolor de cabeza, fiebre" value="'+esc(m.kw||"")+'"></div>'+
+   '<div class="grid2"><div class="f"><label for="e_q">Cantidad</label><input id="e_q" type="number" min="0" step="1" inputmode="numeric" value="'+esc(m.q)+'"></div>'+
+   '<div class="f"><label for="e_unit">Unidad</label><input id="e_unit" value="'+esc(m.unit)+'" placeholder="caja, frasco, tabletas…"></div></div>'+
+   '<div class="grid2"><div class="f"><label for="e_cad">Caducidad (mes y año)</label><input id="e_cad" type="month" value="'+esc(m.cad)+'"></div>'+
+   '<div class="f"><label for="e_pub">Para</label><select id="e_pub"><option value="todos">Adultos y niños</option><option value="adulto">Adulto</option><option value="infantil">Infantil</option></select></div></div>'+
+   '<label class="checks" style="display:flex"><label><input type="checkbox" id="e_rx"'+(m.rx?" checked":"")+'>Requiere receta</label></label>'+
+   '<div class="f"><label for="e_nota">Nota</label><input id="e_nota" value="'+esc(m.nota)+'" placeholder="Ej. 1 en la mañana y 1 en la noche"></div>'+
+   '<div id="delBox" class="confirm" hidden>¿Eliminar “'+esc(m.n)+'” del inventario? <button class="btn danger" type="button" id="delYes">Sí, eliminar</button><button class="btn" type="button" id="delNo">Cancelar</button></div>'+
+   '<div class="actions"><div class="toolbar">'+(isNew?'':'<button class="btn danger" type="button" id="delBtn">Eliminar</button>')+'</div>'+
+   '<div class="toolbar"><button class="btn" type="button" id="cancelBtn">Cancelar</button><button class="btn primary" type="submit">Guardar</button></div></div>'+
+   '</div></form>';
+  panel.querySelector("#e_pub").value=m.pub;
+  sheet.hidden=false;document.body.style.overflow="hidden";
+  panel.querySelector("#cancelBtn").onclick=closeSheet;
+  if(!isNew){
+    panel.querySelector("#delBtn").onclick=function(){panel.querySelector("#delBox").hidden=false};
+    panel.querySelector("#delNo").onclick=function(){panel.querySelector("#delBox").hidden=true};
+    panel.querySelector("#delYes").onclick=function(){meds=meds.filter(function(x){return x.id!==m.id});save();closeSheet();renderAll();toast("Eliminado")};
+  }
+  panel.querySelector("#ef").addEventListener("submit",function(e){
+    e.preventDefault();
+    var g=function(id){return panel.querySelector(id).value.trim()};
+    var n=g("#e_n");if(!n){panel.querySelector("#e_n").focus();toast("Escribe el nombre");return}
+    var o=isNew?{id:uid(),s:[]}:m;
+    o.n=n;o.a=g("#e_a");o.p=g("#e_p");o.u=g("#e_u");o.kw=g("#e_kw");o.nota=g("#e_nota");
+    o.q=Math.max(0,parseFloat(g("#e_q"))||0);o.unit=g("#e_unit")||"envase";o.cad=g("#e_cad");
+    o.pub=panel.querySelector("#e_pub").value;o.rx=panel.querySelector("#e_rx").checked;
+    o.c=Array.prototype.map.call(panel.querySelectorAll('input[name="cat"]:checked'),function(x){return x.value});
+    if(!o.c.length)o.c=["otros"];
+    var t=detect(norm(o.kw+" "+o.u));t.forEach(function(x){if(o.s.indexOf(x)<0)o.s.push(x)});
+    if(isNew)meds.push(o);
+    save();closeSheet();renderAll();toast(isNew?"Medicina agregada":"Cambios guardados");
+  });
+  setTimeout(function(){panel.querySelector(isNew?"#e_n":"#e_q").focus()},50);
+}
+document.getElementById("addBtn").addEventListener("click",function(){openEdit(null)});
+
+/* ---------- Respaldo ---------- */
+document.getElementById("exportBtn").addEventListener("click",function(){
+  var json=JSON.stringify({app:"botiquin",fecha:new Date().toISOString(),meds:meds});
+  var d=new Date(),name="botiquin-respaldo-"+d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")+".json";
+  try{var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([json],{type:"application/json"}));a.download=name;document.body.appendChild(a);a.click();a.remove()}catch(e){}
+  panel.innerHTML='<h2 id="sheetTitle">Respaldo</h2><p style="margin:0;font-size:14px">Si no se descargó el archivo, copia este texto y guárdalo (por ejemplo, mándatelo por WhatsApp).</p>'+
+   '<div class="f"><textarea id="bk" readonly style="min-height:140px;font-family:var(--mono);font-size:12px"></textarea></div>'+
+   '<div class="actions"><span></span><div class="toolbar"><button class="btn" type="button" id="cpy">Copiar</button><button class="btn primary" type="button" id="cls">Listo</button></div></div>';
+  panel.querySelector("#bk").value=json;sheet.hidden=false;
+  panel.querySelector("#cls").onclick=closeSheet;
+  panel.querySelector("#cpy").onclick=function(){var t=panel.querySelector("#bk");
+    var ok=function(){toast("Copiado")},fb=function(){t.focus();t.select();try{document.execCommand("copy");ok()}catch(e){toast("Selecciona y copia el texto")}};
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t.value).then(ok,fb);else fb()};
+});
+function applyImport(txt){
+  try{var d=JSON.parse(txt),arr=Array.isArray(d)?d:d.meds;
+    if(!Array.isArray(arr)||!arr.length||!arr[0].n)throw 0;
+    meds=arr.map(function(m){m.id=m.id||uid();m.c=m.c||["otros"];m.s=m.s||[];m.q=+m.q||0;return m});save();closeSheet();renderAll();toast("Respaldo restaurado: "+meds.length+" medicinas");
+  }catch(e){toast("Ese archivo o texto no es un respaldo válido")}
+}
+document.getElementById("importBtn").addEventListener("click",function(){
+  panel.innerHTML='<h2 id="sheetTitle">Restaurar respaldo</h2><p style="margin:0;font-size:14px">Elige el archivo .json del respaldo o pega el texto copiado. Reemplaza el inventario actual.</p>'+
+   '<div class="toolbar"><button class="btn" type="button" id="pick">Elegir archivo</button></div>'+
+   '<div class="f"><label for="paste">O pega el texto aquí</label><textarea id="paste" style="min-height:110px;font-family:var(--mono);font-size:12px"></textarea></div>'+
+   '<div class="actions"><span></span><div class="toolbar"><button class="btn" type="button" id="cls">Cancelar</button><button class="btn primary" type="button" id="go">Restaurar</button></div></div>';
+  sheet.hidden=false;
+  panel.querySelector("#cls").onclick=closeSheet;
+  panel.querySelector("#pick").onclick=function(){document.getElementById("fileIn").click()};
+  panel.querySelector("#go").onclick=function(){applyImport(panel.querySelector("#paste").value)};
+});
+document.getElementById("fileIn").addEventListener("change",function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){applyImport(r.result)};r.readAsText(f);this.value=""});
+document.getElementById("resetBtn").addEventListener("click",function(){document.getElementById("resetConfirm").hidden=false});
+document.getElementById("resetNo").addEventListener("click",function(){document.getElementById("resetConfirm").hidden=true});
+document.getElementById("resetYes").addEventListener("click",function(){meds=seed();save();document.getElementById("resetConfirm").hidden=true;renderAll();toast("Lista original restablecida")});
+
+renderAll();
+})();
+if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0){navigator.serviceWorker.register("sw.js").catch(function(){})}
+</script>
+</body>
+</html>
