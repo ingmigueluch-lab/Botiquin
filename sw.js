@@ -1,4 +1,4 @@
-const C="botiquin-v3";
+const C="botiquin-v4";
 const F=["./","index.html","manifest.webmanifest","icon-180.png","icon-192.png","icon-512.png"];
 // iOS no muestra respuestas "redirigidas" servidas por el service worker: se copian limpias.
 function clean(r){if(!r||!r.redirected)return Promise.resolve(r);return r.blob().then(b=>new Response(b,{status:r.status,statusText:r.statusText,headers:r.headers}))}
